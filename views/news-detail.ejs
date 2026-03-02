@@ -1,0 +1,94 @@
+<%- include('partials/header') %>
+
+<div class="page-banner">
+  <div class="container">
+    <h1 class="page-banner-title">Новости</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Главная</a></li>
+        <li class="breadcrumb-item"><a href="/news">Новости</a></li>
+        <li class="breadcrumb-item active"><%= item.title.substring(0, 50) %>...</li>
+      </ol>
+    </nav>
+  </div>
+</div>
+
+<div class="container mt-4 mb-5">
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <article class="news-article">
+        <div class="news-article-header">
+          <span class="news-category badge me-2"><%= item.category %></span>
+          <span class="text-muted small">
+            <i class="fas fa-calendar"></i>
+            <%= new Date(item.published_at).toLocaleDateString('ru-RU', {day:'numeric',month:'long',year:'numeric'}) %>
+          </span>
+        </div>
+        <h1 class="news-article-title"><%= item.title %></h1>
+
+        <% if (item.image) { %>
+        <div class="news-article-img-wrap">
+          <img src="<%= item.image %>" alt="<%= item.title %>" class="news-article-img">
+        </div>
+        <% } %>
+
+        <div class="news-article-body">
+          <%- item.content %>
+        </div>
+
+        <div class="news-article-share mt-4">
+          <span>Поделиться:</span>
+          <a href="#" class="share-btn vk"><i class="fab fa-vk"></i> ВКонтакте</a>
+          <a href="#" class="share-btn tg"><i class="fab fa-telegram"></i> Telegram</a>
+        </div>
+
+        <div class="mt-4">
+          <a href="/news" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Назад к новостям
+          </a>
+        </div>
+      </article>
+    </div>
+
+    <div class="col-lg-4">
+      <% if (related.length > 0) { %>
+      <div class="sidebar-widget">
+        <div class="widget-header">
+          <h4><i class="fas fa-newspaper"></i> Похожие материалы</h4>
+        </div>
+        <div class="widget-body p-0">
+          <% related.forEach(r => { %>
+          <div class="related-item">
+            <% if (r.image) { %>
+            <img src="<%= r.image %>" alt="<%= r.title %>" class="related-img">
+            <% } %>
+            <div class="related-info">
+              <a href="/news/<%= r.id %>" class="related-title"><%= r.title %></a>
+              <div class="related-date text-muted small">
+                <%= new Date(r.published_at).toLocaleDateString('ru-RU', {day:'numeric',month:'short',year:'numeric'}) %>
+              </div>
+            </div>
+          </div>
+          <% }) %>
+        </div>
+      </div>
+      <% } %>
+
+      <div class="sidebar-widget mt-4">
+        <div class="widget-header">
+          <h4><i class="fas fa-link"></i> Разделы</h4>
+        </div>
+        <div class="widget-body p-0">
+          <ul class="quick-links">
+            <li><a href="/about"><i class="fas fa-chevron-right"></i> О организации</a></li>
+            <li><a href="/leadership"><i class="fas fa-chevron-right"></i> Руководство</a></li>
+            <li><a href="/events"><i class="fas fa-chevron-right"></i> Мероприятия</a></li>
+            <li><a href="/contacts"><i class="fas fa-chevron-right"></i> Контакты</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

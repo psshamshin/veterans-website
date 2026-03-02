@@ -1,0 +1,83 @@
+<%- include('partials/header') %>
+
+<div class="page-banner">
+  <div class="container">
+    <h1 class="page-banner-title">Руководящий состав</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Главная</a></li>
+        <li class="breadcrumb-item active">Руководящий состав</li>
+      </ol>
+    </nav>
+  </div>
+</div>
+
+<div class="container mt-4 mb-5">
+  <div class="section-header mb-4">
+    <h2 class="section-title">Состав руководящих органов</h2>
+    <p class="text-muted">Руководство Всероссийской общественной организации ветеранов России</p>
+  </div>
+
+  <% if (leaders.length > 0) { %>
+  <div class="row g-4">
+    <% leaders.forEach((leader, i) => { %>
+    <div class="col-lg-6">
+      <div class="leader-card <%= i === 0 ? 'leader-card-chief' : '' %>">
+        <div class="leader-photo-wrap">
+          <% if (leader.photo) { %>
+          <img src="<%= leader.photo %>" alt="<%= leader.name %>" class="leader-photo">
+          <% } else { %>
+          <div class="leader-photo-placeholder">
+            <i class="fas fa-user-tie"></i>
+          </div>
+          <% } %>
+        </div>
+        <div class="leader-info">
+          <% if (i === 0) { %>
+          <span class="leader-badge">Председатель</span>
+          <% } %>
+          <h4 class="leader-name"><%= leader.name %></h4>
+          <div class="leader-position"><%= leader.position %></div>
+          <% if (leader.bio) { %>
+          <p class="leader-bio"><%= leader.bio %></p>
+          <% } %>
+        </div>
+      </div>
+    </div>
+    <% }) %>
+  </div>
+  <% } else { %>
+  <div class="empty-state">
+    <i class="fas fa-users fa-3x text-muted mb-3"></i>
+    <p>Информация о руководстве не добавлена</p>
+  </div>
+  <% } %>
+
+  <!-- Council structure -->
+  <div class="content-card mt-5">
+    <h3 class="content-subtitle"><i class="fas fa-sitemap text-danger me-2"></i>Состав Совета ветеранов</h3>
+    <div class="row g-3 mt-2">
+      <div class="col-md-4">
+        <div class="council-block">
+          <h6><i class="fas fa-gavel text-danger"></i> Президиум</h6>
+          <p class="small">Исполнительный орган, осуществляющий руководство в период между пленумами.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="council-block">
+          <h6><i class="fas fa-balance-scale text-danger"></i> Ревизионная комиссия</h6>
+          <p class="small">Контрольный орган, осуществляющий проверку финансово-хозяйственной деятельности.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="council-block">
+          <h6><i class="fas fa-users text-danger"></i> Пленум</h6>
+          <p class="small">Высший руководящий орган в период между съездами организации.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<%- include('partials/footer') %>

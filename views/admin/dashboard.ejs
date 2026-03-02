@@ -1,0 +1,174 @@
+<%
+  locals.activePage = 'dashboard';
+  locals.flash_success = flash_success;
+  locals.flash_error = flash_error;
+  locals.adminUser = adminUser;
+%>
+<%- include('partials/admin-layout-top') %>
+
+<div class="page-header d-flex justify-content-between align-items-center mb-4">
+  <h2 class="page-title"><i class="fas fa-tachometer-alt me-2"></i>Панель управления</h2>
+  <a href="/" target="_blank" class="btn btn-outline-secondary btn-sm">
+    <i class="fas fa-external-link-alt me-1"></i>Просмотр сайта
+  </a>
+</div>
+
+<!-- Stats cards -->
+<div class="row g-3 mb-4">
+  <div class="col-6 col-xl-3">
+    <div class="stat-card stat-card-primary">
+      <div class="stat-card-icon"><i class="fas fa-newspaper"></i></div>
+      <div class="stat-card-info">
+        <div class="stat-card-number"><%= stats.newsPublished %></div>
+        <div class="stat-card-label">Новостей<br><small class="text-muted">Всего: <%= stats.newsTotal %></small></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-xl-3">
+    <div class="stat-card stat-card-success">
+      <div class="stat-card-icon"><i class="fas fa-calendar-alt"></i></div>
+      <div class="stat-card-info">
+        <div class="stat-card-number"><%= stats.events %></div>
+        <div class="stat-card-label">Мероприятий</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-xl-3">
+    <div class="stat-card stat-card-warning">
+      <div class="stat-card-icon"><i class="fas fa-users"></i></div>
+      <div class="stat-card-info">
+        <div class="stat-card-number"><%= stats.leaders %></div>
+        <div class="stat-card-label">Руководителей</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-xl-3">
+    <div class="stat-card stat-card-danger">
+      <div class="stat-card-icon"><i class="fas fa-envelope"></i></div>
+      <div class="stat-card-info">
+        <div class="stat-card-number"><%= stats.unread %></div>
+        <div class="stat-card-label">Новых обращений<br><small class="text-muted">Всего: <%= stats.messages %></small></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <!-- Recent news -->
+  <div class="col-lg-7">
+    <div class="admin-card">
+      <div class="admin-card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="fas fa-newspaper me-2"></i>Последние новости</h5>
+        <a href="/admin/news/new" class="btn btn-danger btn-sm">
+          <i class="fas fa-plus me-1"></i>Добавить
+        </a>
+      </div>
+      <div class="admin-card-body p-0">
+        <% if (recentNews.length > 0) { %>
+        <table class="table table-hover mb-0">
+          <thead>
+            <tr><th>Заголовок</th><th>Категория</th><th>Статус</th><th></th></tr>
+          </thead>
+          <tbody>
+            <% recentNews.forEach(n => { %>
+            <tr>
+              <td class="text-truncate" style="max-width:200px"><%= n.title %></td>
+              <td><span class="badge bg-secondary"><%= n.category %></span></td>
+              <td>
+                <% if (n.is_published) { %>
+                <span class="badge bg-success">Опубликована</span>
+                <% } else { %>
+                <span class="badge bg-warning text-dark">Черновик</span>
+                <% } %>
+              </td>
+              <td>
+                <a href="/admin/news/<%= n.id %>/edit" class="btn btn-xs btn-outline-primary">
+                  <i class="fas fa-edit"></i>
+                </a>
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+        <% } else { %>
+        <div class="text-center p-4 text-muted">Нет новостей</div>
+        <% } %>
+      </div>
+      <div class="admin-card-footer text-end">
+        <a href="/admin/news" class="btn btn-outline-primary btn-sm">Все новости</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent messages -->
+  <div class="col-lg-5">
+    <div class="admin-card">
+      <div class="admin-card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="fas fa-envelope me-2"></i>Обращения</h5>
+        <% if (stats.unread > 0) { %>
+        <span class="badge bg-danger"><%= stats.unread %> новых</span>
+        <% } %>
+      </div>
+      <div class="admin-card-body p-0">
+        <% if (recentMessages.length > 0) { %>
+        <% recentMessages.forEach(m => { %>
+        <div class="message-preview-item <%= !m.is_read ? 'unread' : '' %>">
+          <div class="d-flex justify-content-between">
+            <strong><%= m.name %></strong>
+            <small class="text-muted"><%= new Date(m.created_at).toLocaleDateString('ru-RU') %></small>
+          </div>
+          <% if (m.subject) { %>
+          <div class="small text-muted"><%= m.subject %></div>
+          <% } %>
+          <div class="small mt-1"><%= m.message.substring(0, 80) %>...</div>
+        </div>
+        <% }) %>
+        <% } else { %>
+        <div class="text-center p-4 text-muted">Обращений нет</div>
+        <% } %>
+      </div>
+      <div class="admin-card-footer text-end">
+        <a href="/admin/messages" class="btn btn-outline-primary btn-sm">Все обращения</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick actions -->
+  <div class="col-12">
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <h5 class="mb-0"><i class="fas fa-bolt me-2"></i>Быстрые действия</h5>
+      </div>
+      <div class="admin-card-body">
+        <div class="row g-2">
+          <div class="col-6 col-md-3">
+            <a href="/admin/news/new" class="quick-action-btn">
+              <i class="fas fa-plus-circle text-danger"></i>
+              <span>Добавить новость</span>
+            </a>
+          </div>
+          <div class="col-6 col-md-3">
+            <a href="/admin/events/new" class="quick-action-btn">
+              <i class="fas fa-calendar-plus text-success"></i>
+              <span>Добавить мероприятие</span>
+            </a>
+          </div>
+          <div class="col-6 col-md-3">
+            <a href="/admin/leaders/new" class="quick-action-btn">
+              <i class="fas fa-user-plus text-primary"></i>
+              <span>Добавить руководителя</span>
+            </a>
+          </div>
+          <div class="col-6 col-md-3">
+            <a href="/admin/messages" class="quick-action-btn">
+              <i class="fas fa-envelope-open text-warning"></i>
+              <span>Просмотр обращений</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/admin-layout-bottom') %>

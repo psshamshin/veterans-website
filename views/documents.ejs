@@ -1,0 +1,67 @@
+<%- include('partials/header') %>
+
+<div class="page-banner">
+  <div class="container">
+    <h1 class="page-banner-title">Документы</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Главная</a></li>
+        <li class="breadcrumb-item active">Документы</li>
+      </ol>
+    </nav>
+  </div>
+</div>
+
+<div class="container mt-4 mb-5">
+
+  <% if (documents.length === 0) { %>
+  <div class="empty-state">
+    <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
+    <p>Документы не загружены</p>
+    <p class="text-muted small">Здесь будут размещены нормативные и организационные документы</p>
+  </div>
+  <% } else { %>
+
+  <% // Group by category
+  const grouped = {};
+  documents.forEach(d => {
+    if (!grouped[d.category]) grouped[d.category] = [];
+    grouped[d.category].push(d);
+  });
+  Object.keys(grouped).forEach(cat => {
+  %>
+  <div class="mb-4">
+    <h4 class="docs-category-title"><i class="fas fa-folder-open text-danger me-2"></i><%= cat %></h4>
+    <div class="docs-list">
+      <% grouped[cat].forEach(doc => { %>
+      <div class="doc-item">
+        <div class="doc-icon">
+          <% if (doc.filename.endsWith('.pdf')) { %>
+          <i class="fas fa-file-pdf text-danger"></i>
+          <% } else if (doc.filename.match(/\.(doc|docx)$/)) { %>
+          <i class="fas fa-file-word text-primary"></i>
+          <% } else { %>
+          <i class="fas fa-file text-secondary"></i>
+          <% } %>
+        </div>
+        <div class="doc-info">
+          <div class="doc-title"><%= doc.title %></div>
+          <div class="doc-date text-muted small">
+            <i class="fas fa-calendar"></i>
+            <%= new Date(doc.uploaded_at).toLocaleDateString('ru-RU', {day:'numeric',month:'long',year:'numeric'}) %>
+          </div>
+        </div>
+        <a href="<%= doc.filename %>" class="btn btn-outline-danger btn-sm" download>
+          <i class="fas fa-download"></i> Скачать
+        </a>
+      </div>
+      <% }) %>
+    </div>
+  </div>
+  <% }) %>
+
+  <% } %>
+
+</div>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> — Панель управления</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin-body">
+
+<div class="admin-wrapper">
+
+  <!-- Sidebar -->
+  <nav class="admin-sidebar" id="adminSidebar">
+    <div class="sidebar-brand">
+      <svg viewBox="0 0 40 40" width="36" height="36">
+        <circle cx="20" cy="20" r="18" fill="#CC0000" stroke="#FFD700" stroke-width="1.5"/>
+        <polygon points="20,5 22,14 31,14 24,20 26,29 20,24 14,29 16,20 9,14 18,14" fill="#FFD700"/>
+      </svg>
+      <span>Совет ветеранов</span>
+    </div>
+
+    <ul class="sidebar-nav">
+      <li class="nav-section">Управление</li>
+      <li>
+        <a href="/admin" class="<%= locals.activePage === 'dashboard' ? 'active' : '' %>">
+          <i class="fas fa-tachometer-alt"></i> Дашборд
+        </a>
+      </li>
+      <li>
+        <a href="/admin/news" class="<%= locals.activePage === 'news' ? 'active' : '' %>">
+          <i class="fas fa-newspaper"></i> Новости
+        </a>
+      </li>
+      <li>
+        <a href="/admin/events" class="<%= locals.activePage === 'events' ? 'active' : '' %>">
+          <i class="fas fa-calendar-alt"></i> Мероприятия
+        </a>
+      </li>
+      <li>
+        <a href="/admin/leaders" class="<%= locals.activePage === 'leaders' ? 'active' : '' %>">
+          <i class="fas fa-users"></i> Руководство
+        </a>
+      </li>
+      <li>
+        <a href="/admin/documents" class="<%= locals.activePage === 'documents' ? 'active' : '' %>">
+          <i class="fas fa-file-alt"></i> Документы
+        </a>
+      </li>
+      <li>
+        <a href="/admin/messages" class="<%= locals.activePage === 'messages' ? 'active' : '' %>">
+          <i class="fas fa-envelope"></i> Обращения
+        </a>
+      </li>
+      <li class="nav-section">Сайт</li>
+      <li>
+        <a href="/" target="_blank">
+          <i class="fas fa-external-link-alt"></i> Просмотр сайта
+        </a>
+      </li>
+      <li>
+        <a href="/admin/logout" class="text-danger">
+          <i class="fas fa-sign-out-alt"></i> Выйти
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Main content -->
+  <div class="admin-main">
+    <!-- Top bar -->
+    <div class="admin-topbar">
+      <button class="sidebar-toggle" id="sidebarToggle">
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="admin-topbar-right">
+        <span class="admin-user"><i class="fas fa-user-circle me-1"></i><%= locals.adminUser || 'admin' %></span>
+        <a href="/admin/logout" class="btn btn-outline-danger btn-sm ms-3">
+          <i class="fas fa-sign-out-alt"></i> Выйти
+        </a>
+      </div>
+    </div>
+
+    <div class="admin-content">
+      <!-- Flash -->
+      <% if (locals.flash_success && flash_success && flash_success.length > 0) { %>
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i><%= flash_success[0] %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+      <% } %>
+      <% if (locals.flash_error && flash_error && flash_error.length > 0) { %>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i><%= flash_error[0] %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+      <% } %>

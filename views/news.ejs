@@ -1,0 +1,125 @@
+<%- include('partials/header') %>
+
+<div class="page-banner">
+  <div class="container">
+    <h1 class="page-banner-title">Новости</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Главная</a></li>
+        <li class="breadcrumb-item active">Новости</li>
+      </ol>
+    </nav>
+  </div>
+</div>
+
+<div class="container mt-4 mb-5">
+  <div class="row g-4">
+    <div class="col-lg-8">
+
+      <!-- Category filter -->
+      <div class="category-filter mb-4">
+        <a href="/news" class="filter-btn <%= !category ? 'active' : '' %>">Все</a>
+        <% categories.forEach(cat => { %>
+        <a href="/news?category=<%= encodeURIComponent(cat.category) %>"
+           class="filter-btn <%= category === cat.category ? 'active' : '' %>">
+          <%= cat.category %>
+        </a>
+        <% }) %>
+      </div>
+
+      <% if (news.length > 0) { %>
+        <% news.forEach(item => { %>
+        <div class="news-list-item">
+          <% if (item.image) { %>
+          <div class="news-list-img">
+            <a href="/news/<%= item.id %>">
+              <img src="<%= item.image %>" alt="<%= item.title %>">
+            </a>
+          </div>
+          <% } else { %>
+          <div class="news-list-img-placeholder">
+            <i class="fas fa-newspaper"></i>
+          </div>
+          <% } %>
+          <div class="news-list-body">
+            <div class="news-list-meta">
+              <span class="news-category badge me-2"><%= item.category %></span>
+              <span class="text-muted small">
+                <i class="fas fa-calendar"></i>
+                <%= new Date(item.published_at).toLocaleDateString('ru-RU', {day:'numeric',month:'long',year:'numeric'}) %>
+              </span>
+            </div>
+            <h4 class="news-list-title">
+              <a href="/news/<%= item.id %>"><%= item.title %></a>
+            </h4>
+            <p class="news-list-excerpt">
+              <%= (item.excerpt || item.content.replace(/<[^>]*>/g, '')).substring(0, 250) %>...
+            </p>
+            <a href="/news/<%= item.id %>" class="btn btn-outline-danger btn-sm">
+              Читать далее <i class="fas fa-arrow-right ms-1"></i>
+            </a>
+          </div>
+        </div>
+        <% }) %>
+
+        <!-- Pagination -->
+        <% if (totalPages > 1) { %>
+        <nav class="mt-4">
+          <ul class="pagination justify-content-center">
+            <% if (currentPage > 1) { %>
+            <li class="page-item">
+              <a class="page-link" href="/news?page=<%= currentPage - 1 %><%= category ? '&category=' + encodeURIComponent(category) : '' %>">
+                <i class="fas fa-chevron-left"></i>
+              </a>
+            </li>
+            <% } %>
+            <% for (let p = 1; p <= totalPages; p++) { %>
+            <li class="page-item <%= p === currentPage ? 'active' : '' %>">
+              <a class="page-link" href="/news?page=<%= p %><%= category ? '&category=' + encodeURIComponent(category) : '' %>"><%= p %></a>
+            </li>
+            <% } %>
+            <% if (currentPage < totalPages) { %>
+            <li class="page-item">
+              <a class="page-link" href="/news?page=<%= currentPage + 1 %><%= category ? '&category=' + encodeURIComponent(category) : '' %>">
+                <i class="fas fa-chevron-right"></i>
+              </a>
+            </li>
+            <% } %>
+          </ul>
+        </nav>
+        <% } %>
+
+      <% } else { %>
+      <div class="empty-state">
+        <i class="fas fa-newspaper fa-3x text-muted mb-3"></i>
+        <p>Новостей не найдено</p>
+        <a href="/news" class="btn btn-outline-primary">Показать все</a>
+      </div>
+      <% } %>
+
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+      <div class="sidebar-widget">
+        <div class="widget-header">
+          <h4><i class="fas fa-tags"></i> Категории</h4>
+        </div>
+        <div class="widget-body p-0">
+          <ul class="quick-links">
+            <li><a href="/news"><i class="fas fa-chevron-right"></i> Все новости</a></li>
+            <% categories.forEach(cat => { %>
+            <li>
+              <a href="/news?category=<%= encodeURIComponent(cat.category) %>">
+                <i class="fas fa-chevron-right"></i> <%= cat.category %>
+              </a>
+            </li>
+            <% }) %>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,126 @@
+<%- include('partials/header') %>
+
+<div class="page-banner">
+  <div class="container">
+    <h1 class="page-banner-title">Контакты</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Главная</a></li>
+        <li class="breadcrumb-item active">Контакты</li>
+      </ol>
+    </nav>
+  </div>
+</div>
+
+<div class="container mt-4 mb-5">
+  <div class="row g-4">
+
+    <!-- Contact info -->
+    <div class="col-lg-4">
+      <div class="content-card">
+        <h4 class="content-subtitle"><i class="fas fa-address-card text-danger me-2"></i>Реквизиты организации</h4>
+        <div class="contact-detail-list">
+          <div class="contact-detail-item">
+            <div class="contact-detail-icon"><i class="fas fa-building"></i></div>
+            <div>
+              <div class="contact-detail-label">Полное название</div>
+              <div class="contact-detail-value">Всероссийская общественная организация ветеранов (пенсионеров) войны, труда, Вооружённых Сил и правоохранительных органов</div>
+            </div>
+          </div>
+          <div class="contact-detail-item">
+            <div class="contact-detail-icon"><i class="fas fa-map-marker-alt"></i></div>
+            <div>
+              <div class="contact-detail-label">Юридический адрес</div>
+              <div class="contact-detail-value">123456, г. Москва, ул. Ветеранов, д. 1</div>
+            </div>
+          </div>
+          <div class="contact-detail-item">
+            <div class="contact-detail-icon"><i class="fas fa-phone"></i></div>
+            <div>
+              <div class="contact-detail-label">Телефон</div>
+              <div class="contact-detail-value"><a href="tel:+74951234567">+7 (495) 123-45-67</a></div>
+            </div>
+          </div>
+          <div class="contact-detail-item">
+            <div class="contact-detail-icon"><i class="fas fa-fax"></i></div>
+            <div>
+              <div class="contact-detail-label">Факс</div>
+              <div class="contact-detail-value">+7 (495) 123-45-68</div>
+            </div>
+          </div>
+          <div class="contact-detail-item">
+            <div class="contact-detail-icon"><i class="fas fa-envelope"></i></div>
+            <div>
+              <div class="contact-detail-label">Email</div>
+              <div class="contact-detail-value"><a href="mailto:info@veteranorg.ru">info@veteranorg.ru</a></div>
+            </div>
+          </div>
+          <div class="contact-detail-item">
+            <div class="contact-detail-icon"><i class="fas fa-clock"></i></div>
+            <div>
+              <div class="contact-detail-label">Режим работы</div>
+              <div class="contact-detail-value">Понедельник – Пятница: 9:00 – 18:00<br>Суббота, воскресенье: выходной</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact form -->
+    <div class="col-lg-8">
+      <div class="content-card">
+        <h4 class="content-subtitle"><i class="fas fa-paper-plane text-danger me-2"></i>Написать нам</h4>
+        <p class="text-muted mb-4">Заполните форму, и мы свяжемся с вами в ближайшее время.</p>
+
+        <form action="/contacts" method="POST" class="contact-form">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Ваше имя <span class="text-danger">*</span></label>
+              <input type="text" name="name" class="form-control" placeholder="Иванов Иван Иванович" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Email</label>
+              <input type="email" name="email" class="form-control" placeholder="example@mail.ru">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Телефон</label>
+              <input type="tel" name="phone" class="form-control" placeholder="+7 (___) ___-__-__">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Тема обращения</label>
+              <select name="subject" class="form-select">
+                <option value="">Выберите тему...</option>
+                <option>Вступление в организацию</option>
+                <option>Социальная помощь</option>
+                <option>Юридическая консультация</option>
+                <option>Мероприятия</option>
+                <option>Другое</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Сообщение <span class="text-danger">*</span></label>
+              <textarea name="message" class="form-control" rows="6"
+                placeholder="Опишите ваш вопрос или обращение..." required></textarea>
+            </div>
+            <div class="col-12">
+              <button type="submit" class="btn btn-danger btn-lg">
+                <i class="fas fa-paper-plane me-2"></i>Отправить сообщение
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Map placeholder -->
+      <div class="map-placeholder mt-4">
+        <div class="map-overlay">
+          <i class="fas fa-map-marked-alt fa-3x text-muted mb-2"></i>
+          <p class="text-muted">Карта: г. Москва, ул. Ветеранов, д. 1</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<%- include('partials/footer') %>

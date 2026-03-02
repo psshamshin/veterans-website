@@ -1,0 +1,73 @@
+<%
+  locals.activePage = 'events';
+  locals.flash_success = flash_success;
+  locals.flash_error = flash_error;
+%>
+<%- include('partials/admin-layout-top') %>
+
+<div class="page-header d-flex justify-content-between align-items-center mb-4">
+  <h2 class="page-title"><i class="fas fa-calendar-alt me-2"></i>Управление мероприятиями</h2>
+  <a href="/admin/events/new" class="btn btn-danger">
+    <i class="fas fa-plus me-1"></i>Добавить мероприятие
+  </a>
+</div>
+
+<div class="admin-card">
+  <div class="admin-card-body p-0">
+    <% if (events.length > 0) { %>
+    <div class="table-responsive">
+      <table class="table table-hover admin-table mb-0">
+        <thead>
+          <tr>
+            <th>#</th><th>Название</th><th>Дата</th><th>Место</th><th>Статус</th><th>Действия</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% events.forEach(ev => { %>
+          <tr>
+            <td class="text-muted"><%= ev.id %></td>
+            <td>
+              <div class="fw-medium"><%= ev.title %></div>
+              <% if (ev.description) { %>
+              <div class="small text-muted"><%= ev.description.substring(0,80) %></div>
+              <% } %>
+            </td>
+            <td class="text-nowrap">
+              <%= new Date(ev.event_date).toLocaleDateString('ru-RU', {day:'numeric',month:'long',year:'numeric'}) %>
+            </td>
+            <td class="text-muted small"><%= ev.location || '—' %></td>
+            <td>
+              <% if (ev.is_past) { %>
+              <span class="badge bg-secondary">Прошло</span>
+              <% } else { %>
+              <span class="badge bg-success">Предстоит</span>
+              <% } %>
+            </td>
+            <td>
+              <div class="d-flex gap-1">
+                <a href="/admin/events/<%= ev.id %>/edit" class="btn btn-xs btn-outline-primary">
+                  <i class="fas fa-edit"></i>
+                </a>
+                <form action="/admin/events/<%= ev.id %>/delete" method="POST"
+                      onsubmit="return confirm('Удалить мероприятие?')">
+                  <button type="submit" class="btn btn-xs btn-outline-danger">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+    <% } else { %>
+    <div class="text-center p-5 text-muted">
+      <i class="fas fa-calendar fa-3x mb-3"></i>
+      <p>Мероприятий нет. <a href="/admin/events/new">Добавить первое</a></p>
+    </div>
+    <% } %>
+  </div>
+</div>
+
+<%- include('partials/admin-layout-bottom') %>

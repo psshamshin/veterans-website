@@ -1,0 +1,61 @@
+<%
+  locals.activePage = 'messages';
+  locals.flash_success = flash_success;
+  locals.flash_error = flash_error;
+%>
+<%- include('partials/admin-layout-top') %>
+
+<div class="page-header mb-4">
+  <h2 class="page-title"><i class="fas fa-envelope me-2"></i>Обращения граждан</h2>
+</div>
+
+<div class="admin-card">
+  <div class="admin-card-body p-0">
+    <% if (messages.length > 0) { %>
+    <div class="messages-list">
+      <% messages.forEach(m => { %>
+      <div class="message-item">
+        <div class="message-header">
+          <div class="d-flex align-items-center gap-3">
+            <div class="message-avatar">
+              <i class="fas fa-user-circle fa-2x text-secondary"></i>
+            </div>
+            <div>
+              <div class="fw-medium"><%= m.name %></div>
+              <div class="small text-muted">
+                <% if (m.email) { %><i class="fas fa-envelope me-1"></i><%= m.email %><% } %>
+                <% if (m.phone) { %><span class="ms-2"><i class="fas fa-phone me-1"></i><%= m.phone %></span><% } %>
+              </div>
+            </div>
+          </div>
+          <div class="message-meta">
+            <% if (m.subject) { %><span class="badge bg-info text-dark me-2"><%= m.subject %></span><% } %>
+            <span class="text-muted small">
+              <%= new Date(m.created_at).toLocaleDateString('ru-RU', {day:'numeric',month:'long',year:'numeric', hour:'2-digit',minute:'2-digit'}) %>
+            </span>
+          </div>
+        </div>
+        <div class="message-body">
+          <%= m.message %>
+        </div>
+        <div class="message-footer">
+          <form action="/admin/messages/<%= m.id %>/delete" method="POST"
+                onsubmit="return confirm('Удалить это сообщение?')">
+            <button type="submit" class="btn btn-xs btn-outline-danger">
+              <i class="fas fa-trash me-1"></i>Удалить
+            </button>
+          </form>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+    <% } else { %>
+    <div class="text-center p-5 text-muted">
+      <i class="fas fa-inbox fa-3x mb-3"></i>
+      <p>Обращений нет</p>
+    </div>
+    <% } %>
+  </div>
+</div>
+
+<%- include('partials/admin-layout-bottom') %>

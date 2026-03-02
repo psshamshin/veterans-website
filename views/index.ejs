@@ -1,0 +1,204 @@
+<%- include('partials/header') %>
+
+<!-- Hero Banner -->
+<section class="hero-section">
+  <div class="hero-overlay">
+    <div class="container h-100 d-flex align-items-center">
+      <div class="hero-content">
+        <h1 class="hero-title">Совет ветеранов России</h1>
+        <p class="hero-subtitle">Всероссийская общественная организация ветеранов (пенсионеров) войны, труда, Вооружённых Сил и правоохранительных органов</p>
+        <div class="hero-buttons">
+          <a href="/about" class="btn btn-hero-primary">О нас</a>
+          <a href="/contacts" class="btn btn-hero-secondary">Связаться с нами</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Strip -->
+<section class="stats-strip">
+  <div class="container">
+    <div class="row g-0">
+      <div class="col-6 col-md-3">
+        <div class="stat-item">
+          <div class="stat-number">14 000+</div>
+          <div class="stat-label">Первичных организаций</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-item">
+          <div class="stat-number">79</div>
+          <div class="stat-label">Лет со Дня Победы</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-item">
+          <div class="stat-number">85</div>
+          <div class="stat-label">Регионов России</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-item">
+          <div class="stat-number">30+</div>
+          <div class="stat-label">Лет объединяем ветеранов</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Main Content -->
+<div class="container mt-4">
+  <div class="row g-4">
+
+    <!-- News Column -->
+    <div class="col-lg-8">
+      <div class="section-header">
+        <h2 class="section-title"><i class="fas fa-newspaper text-danger me-2"></i>Новости</h2>
+        <a href="/news" class="section-link">Все новости <i class="fas fa-arrow-right"></i></a>
+      </div>
+
+      <% if (news.length > 0) { %>
+        <!-- Featured news -->
+        <div class="news-featured mb-4">
+          <% const featured = news[0]; %>
+          <div class="card news-card-featured">
+            <% if (featured.image) { %>
+            <div class="news-card-img-wrap">
+              <img src="<%= featured.image %>" alt="<%= featured.title %>" class="card-img-top news-card-img">
+            </div>
+            <% } else { %>
+            <div class="news-card-img-placeholder-lg">
+              <i class="fas fa-newspaper"></i>
+            </div>
+            <% } %>
+            <div class="card-body">
+              <span class="news-category badge"><%= featured.category %></span>
+              <h3 class="news-title-lg mt-2">
+                <a href="/news/<%= featured.id %>"><%= featured.title %></a>
+              </h3>
+              <p class="news-excerpt"><%= featured.excerpt || featured.content.replace(/<[^>]*>/g, '').substring(0, 200) %>...</p>
+              <div class="news-meta">
+                <span><i class="fas fa-calendar"></i>
+                  <%= new Date(featured.published_at).toLocaleDateString('ru-RU', {day:'numeric',month:'long',year:'numeric'}) %>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- News grid -->
+        <div class="row g-3">
+          <% news.slice(1).forEach(item => { %>
+          <div class="col-md-6">
+            <div class="card news-card h-100">
+              <% if (item.image) { %>
+              <img src="<%= item.image %>" alt="<%= item.title %>" class="card-img-top news-card-img-sm">
+              <% } else { %>
+              <div class="news-card-img-placeholder">
+                <i class="fas fa-newspaper"></i>
+              </div>
+              <% } %>
+              <div class="card-body">
+                <span class="news-category badge badge-sm"><%= item.category %></span>
+                <h5 class="news-title mt-1">
+                  <a href="/news/<%= item.id %>"><%= item.title %></a>
+                </h5>
+                <p class="news-excerpt-sm"><%= (item.excerpt || item.content.replace(/<[^>]*>/g,'')).substring(0,120) %>...</p>
+                <div class="news-meta-sm">
+                  <span><i class="fas fa-calendar"></i>
+                    <%= new Date(item.published_at).toLocaleDateString('ru-RU', {day:'numeric',month:'long',year:'numeric'}) %>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <% }) %>
+        </div>
+
+      <% } else { %>
+        <div class="empty-state">
+          <i class="fas fa-newspaper fa-3x text-muted mb-3"></i>
+          <p>Новостей пока нет</p>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+
+      <!-- Events widget -->
+      <div class="sidebar-widget">
+        <div class="widget-header">
+          <h4><i class="fas fa-calendar-alt"></i> Мероприятия</h4>
+        </div>
+        <div class="widget-body">
+          <% if (events.length > 0) { %>
+            <% events.forEach(ev => { %>
+            <div class="event-item">
+              <div class="event-date-badge <%= ev.is_past ? 'past' : '' %>">
+                <% const d = new Date(ev.event_date); %>
+                <span class="event-day"><%= d.getDate() %></span>
+                <span class="event-month"><%= d.toLocaleDateString('ru-RU', {month:'short'}) %></span>
+              </div>
+              <div class="event-info">
+                <a href="/events" class="event-title"><%= ev.title %></a>
+                <% if (ev.location) { %>
+                <div class="event-location"><i class="fas fa-map-pin"></i> <%= ev.location %></div>
+                <% } %>
+              </div>
+            </div>
+            <% }) %>
+            <a href="/events" class="btn btn-outline-primary btn-sm w-100 mt-3">Все мероприятия</a>
+          <% } else { %>
+            <p class="text-muted small">Мероприятий не запланировано</p>
+          <% } %>
+        </div>
+      </div>
+
+      <!-- Quick links -->
+      <div class="sidebar-widget mt-4">
+        <div class="widget-header">
+          <h4><i class="fas fa-link"></i> Быстрые ссылки</h4>
+        </div>
+        <div class="widget-body p-0">
+          <ul class="quick-links">
+            <li><a href="/about"><i class="fas fa-chevron-right"></i> Об организации</a></li>
+            <li><a href="/leadership"><i class="fas fa-chevron-right"></i> Руководящий состав</a></li>
+            <li><a href="/documents"><i class="fas fa-chevron-right"></i> Нормативные документы</a></li>
+            <li><a href="/contacts"><i class="fas fa-chevron-right"></i> Обратная связь</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Contacts widget -->
+      <div class="sidebar-widget mt-4">
+        <div class="widget-header">
+          <h4><i class="fas fa-address-card"></i> Контакты</h4>
+        </div>
+        <div class="widget-body">
+          <div class="contact-info-item">
+            <i class="fas fa-map-marker-alt text-danger"></i>
+            <span>123456, г. Москва, ул. Ветеранов, д. 1</span>
+          </div>
+          <div class="contact-info-item">
+            <i class="fas fa-phone text-danger"></i>
+            <span>+7 (495) 123-45-67</span>
+          </div>
+          <div class="contact-info-item">
+            <i class="fas fa-envelope text-danger"></i>
+            <span>info@veteranorg.ru</span>
+          </div>
+          <div class="contact-info-item">
+            <i class="fas fa-clock text-danger"></i>
+            <span>Пн–Пт: 9:00–18:00</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

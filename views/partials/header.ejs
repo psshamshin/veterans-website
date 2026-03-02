@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> — Совет ветеранов России</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="topbar">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="topbar-contacts">
+        <span><i class="fas fa-phone"></i> +7 (495) 123-45-67</span>
+        <span class="ms-3"><i class="fas fa-envelope"></i> info@veteranorg.ru</span>
+      </div>
+      <div class="topbar-right">
+        <span><i class="fas fa-clock"></i> Пн–Пт: 9:00–18:00</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Header -->
+<header class="site-header">
+  <div class="container">
+    <div class="d-flex align-items-center justify-content-between py-3">
+      <a href="/" class="header-logo d-flex align-items-center text-decoration-none">
+        <div class="logo-emblem me-3">
+          <svg viewBox="0 0 60 60" width="60" height="60">
+            <circle cx="30" cy="30" r="28" fill="#CC0000" stroke="#FFD700" stroke-width="2"/>
+            <polygon points="30,8 33,22 47,22 36,31 40,45 30,37 20,45 24,31 13,22 27,22" fill="#FFD700"/>
+            <circle cx="30" cy="30" r="10" fill="#1B3A6B"/>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <div class="logo-title">Совет ветеранов</div>
+          <div class="logo-subtitle">России</div>
+        </div>
+      </a>
+      <div class="header-info text-end d-none d-lg-block">
+        <div class="header-slogan">Честь. Память. Долг.</div>
+        <div class="header-desc">Всероссийская общественная организация ветеранов</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Navigation -->
+<nav class="main-nav navbar navbar-expand-lg">
+  <div class="container">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link <%= activePage === 'home' ? 'active' : '' %>" href="/">
+            <i class="fas fa-home"></i> Главная
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= activePage === 'about' ? 'active' : '' %>" href="/about">
+            <i class="fas fa-info-circle"></i> О организации
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= activePage === 'leadership' ? 'active' : '' %>" href="/leadership">
+            <i class="fas fa-users"></i> Руководство
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= activePage === 'news' ? 'active' : '' %>" href="/news">
+            <i class="fas fa-newspaper"></i> Новости
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= activePage === 'events' ? 'active' : '' %>" href="/events">
+            <i class="fas fa-calendar-alt"></i> Мероприятия
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= activePage === 'documents' ? 'active' : '' %>" href="/documents">
+            <i class="fas fa-file-alt"></i> Документы
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= activePage === 'contacts' ? 'active' : '' %>" href="/contacts">
+            <i class="fas fa-map-marker-alt"></i> Контакты
+          </a>
+        </li>
+      </ul>
+      <div class="nav-admin-link">
+        <a href="/admin" class="btn btn-admin-sm">
+          <i class="fas fa-lock"></i> Администратор
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Flash messages -->
+<% if (locals.flash_success && flash_success.length > 0) { %>
+<div class="alert alert-success alert-dismissible fade show m-0 rounded-0" role="alert">
+  <div class="container"><%= flash_success[0] %></div>
+  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+<% } %>
+<% if (locals.flash_error && flash_error.length > 0) { %>
+<div class="alert alert-danger alert-dismissible fade show m-0 rounded-0" role="alert">
+  <div class="container"><%= flash_error[0] %></div>
+  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+<% } %>
