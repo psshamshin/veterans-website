@@ -70,7 +70,8 @@ img { max-width: 100%; }
   letter-spacing: 2px;
   text-transform: uppercase;
 }
-.logo-emblem svg { filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
+.logo-emblem svg { filter: drop-shadow(0 3px 8px rgba(0,0,0,0.4)); transition: filter 0.2s; }
+.logo-emblem svg:hover { filter: drop-shadow(0 4px 12px rgba(192,48,48,0.4)); }
 
 .header-slogan {
   font-size: 1.1rem;
