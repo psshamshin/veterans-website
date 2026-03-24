@@ -1,0 +1,55 @@
+<%- include('partials/header') %>
+
+<!-- Page Banner -->
+<div class="page-banner">
+  <div class="container">
+    <h1 class="page-banner-title"><i class="fas fa-images me-2"></i>Галерея</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Главная</a></li>
+        <li class="breadcrumb-item active">Галерея</li>
+      </ol>
+    </nav>
+  </div>
+</div>
+
+<main class="py-5">
+  <div class="container">
+
+    <% if (photos.length > 0) { %>
+
+    <p class="text-muted mb-4">Все фотоматериалы из новостей организации. Нажмите на фото, чтобы перейти к новости.</p>
+
+    <div class="gallery-grid">
+      <% photos.forEach(function(photo) { %>
+      <a href="/news/<%= photo.id %>" class="gallery-item" title="<%= photo.title %>">
+        <img src="<%= photo.image %>" alt="<%= photo.title %>" loading="lazy">
+        <div class="gallery-item-overlay">
+          <div class="gallery-item-info">
+            <span class="gallery-item-category"><%= photo.category %></span>
+            <p class="gallery-item-title"><%= photo.title %></p>
+            <span class="gallery-item-date">
+              <i class="fas fa-calendar me-1"></i>
+              <%= new Date(photo.published_at).toLocaleDateString('ru-RU', {day:'numeric', month:'long', year:'numeric'}) %>
+            </span>
+          </div>
+        </div>
+      </a>
+      <% }) %>
+    </div>
+
+    <% } else { %>
+    <div class="empty-state">
+      <i class="fas fa-images fa-3x mb-3" style="color:var(--text-muted); opacity:0.4;"></i>
+      <h4 style="color:var(--primary);">Фотографий пока нет</h4>
+      <p class="text-muted">Фото появятся здесь после публикации новостей с изображениями.</p>
+      <a href="/news" class="btn-region-detail mt-3 d-inline-flex">
+        <i class="fas fa-newspaper me-2"></i> Перейти к новостям
+      </a>
+    </div>
+    <% } %>
+
+  </div>
+</main>
+
+<%- include('partials/footer') %>

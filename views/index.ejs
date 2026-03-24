@@ -128,31 +128,29 @@
     <!-- Sidebar -->
     <div class="col-lg-4">
 
-      <!-- Events widget -->
+      <!-- Gallery widget -->
       <div class="sidebar-widget">
         <div class="widget-header">
-          <h4><i class="fas fa-calendar-alt"></i> Мероприятия</h4>
+          <h4><i class="fas fa-images"></i> Галерея</h4>
         </div>
-        <div class="widget-body">
-          <% if (events.length > 0) { %>
-            <% events.forEach(ev => { %>
-            <div class="event-item">
-              <div class="event-date-badge <%= ev.is_past ? 'past' : '' %>">
-                <% const d = new Date(ev.event_date); %>
-                <span class="event-day"><%= d.getDate() %></span>
-                <span class="event-month"><%= d.toLocaleDateString('ru-RU', {month:'short'}) %></span>
-              </div>
-              <div class="event-info">
-                <a href="/events" class="event-title"><%= ev.title %></a>
-                <% if (ev.location) { %>
-                <div class="event-location"><i class="fas fa-map-pin"></i> <%= ev.location %></div>
-                <% } %>
-              </div>
-            </div>
+        <div class="widget-body p-2">
+          <% if (galleryPhotos && galleryPhotos.length > 0) { %>
+          <div class="sidebar-gallery-grid">
+            <% galleryPhotos.forEach(photo => { %>
+            <a href="/news/<%= photo.id %>" class="sidebar-gallery-item" title="<%= photo.title %>">
+              <img src="<%= photo.image %>" alt="<%= photo.title %>">
+              <div class="sidebar-gallery-overlay"><i class="fas fa-arrow-right"></i></div>
+            </a>
             <% }) %>
-            <a href="/events" class="btn btn-outline-primary btn-sm w-100 mt-3">Все мероприятия</a>
+          </div>
+          <a href="/gallery" class="btn-region-detail d-block text-center mt-3">
+            <i class="fas fa-images me-1"></i> Вся галерея
+          </a>
           <% } else { %>
-            <p class="text-muted small">Мероприятий не запланировано</p>
+            <p class="text-muted small text-center py-2">Фото появятся после публикации новостей с изображениями</p>
+            <a href="/gallery" class="btn-region-detail d-block text-center mt-2">
+              <i class="fas fa-images me-1"></i> Галерея
+            </a>
           <% } %>
         </div>
       </div>

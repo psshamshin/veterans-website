@@ -9,10 +9,12 @@ router.get('/', (req, res) => {
     SELECT * FROM news WHERE is_published = 1
     ORDER BY published_at DESC LIMIT 6
   `).all();
-  const events = db.prepare(`
-    SELECT * FROM events ORDER BY is_past ASC, event_date ASC LIMIT 4
+  const galleryPhotos = db.prepare(`
+    SELECT id, title, image FROM news
+    WHERE is_published = 1 AND image IS NOT NULL AND image != ''
+    ORDER BY published_at DESC LIMIT 6
   `).all();
-  res.render('index', { title: 'Главная', news, events, activePage: 'home' });
+  res.render('index', { title: 'Главная', news, galleryPhotos, activePage: 'home' });
 });
 
 // About
@@ -110,6 +112,17 @@ router.get('/contacts', (req, res) => {
 // Media
 router.get('/media', (req, res) => {
   res.render('media', { title: 'СМИ', activePage: 'media' });
+});
+
+// Gallery
+router.get('/gallery', (req, res) => {
+  const db = getDb();
+  const photos = db.prepare(`
+    SELECT id, title, image, category, published_at FROM news
+    WHERE is_published = 1 AND image IS NOT NULL AND image != ''
+    ORDER BY published_at DESC
+  `).all();
+  res.render('gallery', { title: 'Галерея', photos, activePage: 'gallery' });
 });
 
 // Regions
