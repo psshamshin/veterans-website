@@ -79,8 +79,11 @@
           <label class="form-label fw-medium">
             <%= item && item.image ? 'Заменить изображение' : 'Загрузить изображение' %>
           </label>
-          <input type="file" name="image" class="form-control" accept="image/*">
-          <div class="form-text">Форматы: JPG, PNG, GIF. Макс. 50 МБ</div>
+          <input type="file" name="image" id="newsImageInput" class="form-control" accept="image/*"
+            data-crop-ratio="16/9" data-preview-id="newsImagePreview">
+          <img id="newsImagePreview" src="" alt="Превью" class="img-fluid rounded mt-2"
+            style="max-height:160px;display:none">
+          <div class="form-text">Форматы: JPG, PNG. Макс. 50 МБ. Кроп 16:9 применится автоматически.</div>
         </div>
       </div>
 

@@ -48,8 +48,11 @@
             <img src="<%= item.photo %>" alt="" class="rounded" style="max-height:120px">
           </div>
           <% } %>
-          <input type="file" name="photo" class="form-control" accept="image/*">
-          <div class="form-text">Квадратное фото (JPG, PNG). Рекомендуемый размер: 300×300px</div>
+          <input type="file" name="photo" id="leaderPhotoInput" class="form-control" accept="image/*"
+            data-crop-ratio="1" data-preview-id="leaderPhotoPreview">
+          <img id="leaderPhotoPreview" src="" alt="Превью" class="rounded mt-2"
+            style="max-height:120px;display:none">
+          <div class="form-text">JPG, PNG. Кроп 1:1 (квадрат) применится автоматически.</div>
         </div>
       </div>
       <div class="mt-4 d-flex gap-2">

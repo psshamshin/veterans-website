@@ -3,10 +3,152 @@
 </div><!-- /.admin-wrapper -->
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.js"></script>
+
+<!-- Universal image crop modal -->
+<div class="modal fade" id="cropModal" tabindex="-1" data-bs-backdrop="static">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fas fa-crop-alt me-2"></i>Обрезать изображение</h5>
+      </div>
+      <div class="modal-body p-3" style="background:#1a1a2e">
+        <div style="max-height:65vh;overflow:hidden">
+          <img id="cropImage" src="" style="max-width:100%;display:block">
+        </div>
+        <div class="d-flex gap-2 mt-3 flex-wrap">
+          <button type="button" class="btn btn-sm btn-outline-light" id="cropRotateL">
+            <i class="fas fa-undo"></i> −90°
+          </button>
+          <button type="button" class="btn btn-sm btn-outline-light" id="cropRotateR">
+            <i class="fas fa-redo"></i> +90°
+          </button>
+          <button type="button" class="btn btn-sm btn-outline-light" id="cropFlipH">
+            <i class="fas fa-arrows-alt-h"></i> Отразить
+          </button>
+          <button type="button" class="btn btn-sm btn-outline-secondary ms-auto" id="cropReset">
+            <i class="fas fa-sync"></i> Сброс
+          </button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" id="cropCancel">Отмена</button>
+        <button type="button" class="btn btn-danger" id="cropApply">
+          <i class="fas fa-check me-1"></i>Применить обрезку
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
   document.getElementById('sidebarToggle')?.addEventListener('click', function() {
     document.getElementById('adminSidebar').classList.toggle('collapsed');
   });
+
+  // ── Universal image cropper ───────────────────────────────────────────────
+  let cropper = null;
+  let activeInput = null;
+  const cropModalEl = document.getElementById('cropModal');
+  const cropModal = new bootstrap.Modal(cropModalEl);
+  const cropImg = document.getElementById('cropImage');
+
+  // Attach to every file input that has data-crop-ratio
+  document.querySelectorAll('input[type="file"][data-crop-ratio]').forEach(function(input) {
+    const preview = document.getElementById(input.dataset.previewId);
+
+    input.addEventListener('change', function() {
+      if (!this.files || !this.files[0]) return;
+      const file = this.files[0];
+      if (!file.type.startsWith('image/')) return;
+
+      activeInput = this;
+      const ratio = this.dataset.cropRatio;
+      const url = URL.createObjectURL(file);
+      cropImg.src = url;
+
+      cropModal.show();
+
+      cropModalEl.addEventListener('shown.bs.modal', function handler() {
+        cropModalEl.removeEventListener('shown.bs.modal', handler);
+        if (cropper) { cropper.destroy(); cropper = null; }
+        cropper = new Cropper(cropImg, {
+          aspectRatio: ratio ? eval(ratio) : NaN,
+          viewMode: 1,
+          dragMode: 'move',
+          autoCropArea: 0.9,
+          restore: false,
+          guides: true,
+          center: true,
+          highlight: false,
+          cropBoxMovable: true,
+          cropBoxResizable: true,
+          toggleDragModeOnDblclick: false,
+        });
+      }, { once: true });
+    });
+  });
+
+  document.getElementById('cropRotateL').addEventListener('click', function() { cropper?.rotate(-90); });
+  document.getElementById('cropRotateR').addEventListener('click', function() { cropper?.rotate(90); });
+  document.getElementById('cropFlipH').addEventListener('click', function() {
+    if (!cropper) return;
+    const data = cropper.getData();
+    cropper.scaleX(cropper.getData().scaleX === -1 ? 1 : -1);
+  });
+  document.getElementById('cropReset').addEventListener('click', function() { cropper?.reset(); });
+
+  document.getElementById('cropCancel').addEventListener('click', function() {
+    cropModal.hide();
+    if (activeInput) activeInput.value = '';
+    activeInput = null;
+    destroyCropper();
+  });
+
+  document.getElementById('cropApply').addEventListener('click', function() {
+    if (!cropper || !activeInput) return;
+    const btn = this;
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Обработка...';
+
+    const canvas = cropper.getCroppedCanvas({ maxWidth: 2000, maxHeight: 2000, fillColor: '#fff' });
+    canvas.toBlob(function(blob) {
+      const origName = activeInput.files[0].name;
+      const ext = origName.split('.').pop().toLowerCase();
+      const mime = (ext === 'png') ? 'image/png' : 'image/jpeg';
+      const croppedFile = new File([blob], origName, { type: mime });
+
+      const dt = new DataTransfer();
+      dt.items.add(croppedFile);
+      activeInput.files = dt.files;
+
+      // Show thumbnail preview
+      const previewId = activeInput.dataset.previewId;
+      if (previewId) {
+        const prev = document.getElementById(previewId);
+        if (prev) {
+          prev.src = canvas.toDataURL(mime);
+          prev.style.display = 'block';
+        }
+      }
+
+      cropModal.hide();
+      destroyCropper();
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-check me-1"></i>Применить обрезку';
+    }, 'image/jpeg', 0.92);
+  });
+
+  cropModalEl.addEventListener('hidden.bs.modal', function() {
+    destroyCropper();
+  });
+
+  function destroyCropper() {
+    if (cropper) { cropper.destroy(); cropper = null; }
+    if (cropImg.src.startsWith('blob:')) URL.revokeObjectURL(cropImg.src);
+    cropImg.src = '';
+    activeInput = null;
+  }
 </script>
 </body>
 </html>
