@@ -48,10 +48,8 @@
           <div class="mb-3">
             <label class="form-label fw-medium">Категория</label>
             <select name="category" class="form-select">
-              <% const cats = ['Новости', 'События', 'Мероприятия', 'Социальная помощь', 'Официально', 'Образование']; %>
-              <% cats.forEach(c => { %>
-              <option value="<%= c %>" <%= (item && item.category === c) ? 'selected' : '' %>><%= c %></option>
-              <% }) %>
+              <option value="Новости организации" <%= (!item || item.category === 'Новости организации') ? 'selected' : '' %>>Новости организации</option>
+              <option value="Новости в регионах" <%= (item && item.category === 'Новости в регионах') ? 'selected' : '' %>>Новости в регионах</option>
             </select>
           </div>
           <div class="mb-3">
@@ -82,7 +80,7 @@
             <%= item && item.image ? 'Заменить изображение' : 'Загрузить изображение' %>
           </label>
           <input type="file" name="image" class="form-control" accept="image/*">
-          <div class="form-text">Форматы: JPG, PNG, GIF. Макс. 5 МБ</div>
+          <div class="form-text">Форматы: JPG, PNG, GIF. Макс. 50 МБ</div>
         </div>
       </div>
 
