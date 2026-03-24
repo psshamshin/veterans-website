@@ -2,13 +2,15 @@ const express = require('express');
 const session = require('express-session');
 const flash = require('connect-flash');
 const path = require('path');
+const fs = require('fs');
 const { initDatabase } = require('./database');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Init DB
-initDatabase();
+// Ensure uploads directory exists
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 
 // View engine
 app.set('view engine', 'ejs');
@@ -50,8 +52,26 @@ app.use((req, res) => {
   res.status(404).render('404', { title: 'Страница не найдена' });
 });
 
-app.listen(PORT, () => {
-  console.log(`\n✅ Сайт запущен: http://localhost:${PORT}`);
-  console.log(`🔐 Панель администратора: http://localhost:${PORT}/admin`);
-  console.log(`   Логин: admin | Пароль: admin123\n`);
+// Multer / general error handler
+app.use((err, req, res, next) => {
+  if (err.code === 'LIMIT_FILE_SIZE') {
+    req.flash('error', 'Файл слишком большой. Максимальный размер: 50 МБ');
+    return res.redirect('back');
+  }
+  console.error(err);
+  res.status(500).render('404', { title: 'Ошибка сервера' });
 });
+
+// Start server after DB init
+initDatabase()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`\n✅ Сайт запущен: http://localhost:${PORT}`);
+      console.log(`🔐 Панель администратора: http://localhost:${PORT}/admin`);
+      console.log(`   Логин: admin | Пароль: admin123\n`);
+    });
+  })
+  .catch(err => {
+    console.error('❌ Ошибка подключения к БД:', err.message);
+    process.exit(1);
+  });
