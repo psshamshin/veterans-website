@@ -1,0 +1,79 @@
+<%- include('partials/header') %>
+
+<!-- Page Banner -->
+<div class="page-banner">
+  <div class="container">
+    <h1 class="page-banner-title"><i class="fas fa-map-marked-alt me-2"></i>Региональные организации</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Главная</a></li>
+        <li class="breadcrumb-item active">Региональные организации</li>
+      </ol>
+    </nav>
+  </div>
+</div>
+
+<main class="py-5">
+  <div class="container">
+
+    <!-- Intro -->
+    <div class="row mb-5">
+      <div class="col-lg-8">
+        <p class="lead text-muted">
+          Совет ветеранов России объединяет региональные отделения по всей стране.
+          Найдите организацию в вашем городе и свяжитесь с ней напрямую.
+        </p>
+      </div>
+      <div class="col-lg-4 text-lg-end">
+        <div class="regions-total-badge">
+          <span class="regions-total-number"><%= regions.length %></span>
+          <span class="regions-total-label">региональных отделений</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Regions grid -->
+    <div class="row g-4">
+      <% regions.forEach(function(region) { %>
+      <div class="col-md-6 col-xl-4">
+        <div class="region-card">
+          <div class="region-card-header">
+            <div class="region-city-icon">
+              <i class="fas fa-city"></i>
+            </div>
+            <div>
+              <div class="region-city"><%= region.city %></div>
+              <div class="region-members"><i class="fas fa-users me-1"></i><%= region.members %> участников</div>
+            </div>
+          </div>
+          <div class="region-card-body">
+            <div class="region-org-name"><%= region.name %></div>
+            <ul class="region-contacts">
+              <li>
+                <i class="fas fa-map-marker-alt"></i>
+                <span><%= region.address %></span>
+              </li>
+              <li>
+                <i class="fas fa-phone"></i>
+                <a href="tel:<%= region.phone.replace(/\s|\(|\)|-/g, '') %>"><%= region.phone %></a>
+              </li>
+              <li>
+                <i class="fas fa-envelope"></i>
+                <a href="mailto:<%= region.email %>"><%= region.email %></a>
+              </li>
+            </ul>
+          </div>
+          <div class="region-card-footer">
+            <a href="<%= region.website %>" target="_blank" rel="noopener" class="btn-region-detail">
+              <i class="fas fa-external-link-alt me-1"></i> Подробнее
+            </a>
+          </div>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+
+  </div>
+</main>
+
+<%- include('partials/footer') %>
