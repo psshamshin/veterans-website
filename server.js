@@ -2,15 +2,13 @@ const express = require('express');
 const session = require('express-session');
 const flash = require('connect-flash');
 const path = require('path');
-const fs = require('fs');
 const { initDatabase } = require('./database');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Ensure uploads directory exists
-const uploadsDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
+// Init DB (sync — also creates data/ and uploads/ dirs)
+initDatabase();
 
 // View engine
 app.set('view engine', 'ejs');
@@ -62,16 +60,8 @@ app.use((err, req, res, next) => {
   res.status(500).render('404', { title: 'Ошибка сервера' });
 });
 
-// Start server after DB init
-initDatabase()
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log(`\n✅ Сайт запущен: http://localhost:${PORT}`);
-      console.log(`🔐 Панель администратора: http://localhost:${PORT}/admin`);
-      console.log(`   Логин: admin | Пароль: admin123\n`);
-    });
-  })
-  .catch(err => {
-    console.error('❌ Ошибка подключения к БД:', err.message);
-    process.exit(1);
-  });
+app.listen(PORT, () => {
+  console.log(`\n✅ Сайт запущен: http://localhost:${PORT}`);
+  console.log(`🔐 Панель администратора: http://localhost:${PORT}/admin`);
+  console.log(`   Логин: admin | Пароль: admin123\n`);
+});
