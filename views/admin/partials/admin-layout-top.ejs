@@ -19,8 +19,8 @@
       <svg viewBox="0 0 60 60" width="36" height="36" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <linearGradient id="shieldGradAdmin" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#4A4858"/>
-            <stop offset="100%" stop-color="#2E2D3A"/>
+            <stop offset="0%" stop-color="#1B3A6B"/>
+            <stop offset="100%" stop-color="#0F2347"/>
           </linearGradient>
         </defs>
         <path d="M7,5 H53 V33 Q53,51 30,59 Q7,51 7,33 Z" fill="url(#shieldGradAdmin)"/>
@@ -64,6 +64,11 @@
         </a>
       </li>
       <li class="nav-section">Сайт</li>
+      <li>
+        <a href="/admin/settings" class="<%= locals.activePage === 'settings' ? 'active' : '' %>">
+          <i class="fas fa-cog"></i> Настройки
+        </a>
+      </li>
       <li>
         <a href="/" target="_blank">
           <i class="fas fa-external-link-alt"></i> Просмотр сайта

@@ -2,7 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const flash = require('connect-flash');
 const path = require('path');
-const { initDatabase } = require('./database');
+const { initDatabase, getOne } = require('./database');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -38,6 +38,12 @@ app.use((req, res, next) => {
   res.locals.flash_success = req.flash('success');
   res.locals.flash_error = req.flash('error');
   res.locals.isAdmin = req.session && req.session.isAdmin;
+  try {
+    const logo = getOne("SELECT value FROM settings WHERE key = 'logo'");
+    res.locals.siteSettings = { logo: logo ? logo.value : null };
+  } catch (_) {
+    res.locals.siteSettings = { logo: null };
+  }
   next();
 });
 

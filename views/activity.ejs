@@ -1,0 +1,204 @@
+<%
+  locals.activePage = 'activity';
+%>
+<%- include('partials/header') %>
+
+<div class="page-banner">
+  <div class="container">
+    <h1 class="page-banner-title"><i class="fas fa-hands-helping me-2"></i>Деятельность</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Главная</a></li>
+        <li class="breadcrumb-item active">Деятельность</li>
+      </ol>
+    </nav>
+  </div>
+</div>
+
+<div class="container py-5">
+
+  <!-- Социальная защита -->
+  <section id="social" class="activity-section mb-5 pt-3">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-7 order-1">
+        <div class="activity-label"><i class="fas fa-heart me-2"></i>Социальная защита</div>
+        <h2 class="activity-title">Социальная защита ветеранов</h2>
+        <div class="content-divider"></div>
+        <p class="activity-text">
+          Организация осуществляет системную работу по защите социальных прав и интересов ветеранов.
+          Мы добиваемся улучшения пенсионного обеспечения, сохранения льгот и гарантий для ветеранов войны,
+          труда и военной службы. Ведётся постоянный мониторинг исполнения федерального законодательства
+          о ветеранах, оказывается юридическая помощь при решении социальных вопросов.
+        </p>
+        <p class="activity-text">
+          Совместно с органами государственной власти реализуются программы улучшения жилищных условий,
+          медицинского обслуживания и санаторно-курортного лечения. Организация участвует в разработке
+          нормативных актов, затрагивающих интересы ветеранского сообщества.
+        </p>
+        <a href="/contacts" class="btn btn-activity mt-2">
+          <i class="fas fa-envelope me-2"></i>Обратиться за помощью
+        </a>
+      </div>
+      <div class="col-lg-5 order-2">
+        <div class="activity-img-wrap">
+          <div class="activity-img-placeholder">
+            <i class="fas fa-hands-helping"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="activity-divider">
+
+  <!-- Патриотическое воспитание -->
+  <section id="patriotic" class="activity-section mb-5 pt-4">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-5 order-2 order-lg-1">
+        <div class="activity-img-wrap">
+          <div class="activity-img-placeholder" style="background: linear-gradient(135deg, #8B1A1A 0%, #C03030 100%)">
+            <i class="fas fa-flag"></i>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-7 order-1 order-lg-2">
+        <div class="activity-label"><i class="fas fa-flag me-2"></i>Патриотическое воспитание</div>
+        <h2 class="activity-title">Патриотическое воспитание</h2>
+        <div class="content-divider"></div>
+        <p class="activity-text">
+          Организация ведёт активную работу по патриотическому воспитанию молодого поколения.
+          Ветераны участвуют в проведении уроков мужества, встреч со школьниками и студентами,
+          передавая живую память о подвигах защитников Отечества. Ежегодно проводятся тысячи
+          встреч с молодёжью по всей стране.
+        </p>
+        <p class="activity-text">
+          Организуются торжественные мероприятия, посвящённые памятным датам российской истории:
+          Дню Победы, Дню защитника Отечества, годовщинам важнейших сражений. Поддерживаются
+          поисковые отряды, устанавливаются памятные знаки в честь героев Великой Отечественной войны.
+        </p>
+        <a href="/news?category=Новости организации" class="btn btn-activity mt-2">
+          <i class="fas fa-newspaper me-2"></i>Читать новости
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <hr class="activity-divider">
+
+  <!-- Взаимодействие -->
+  <section id="cooperation" class="activity-section mb-5 pt-4">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-7 order-1">
+        <div class="activity-label"><i class="fas fa-handshake me-2"></i>Взаимодействие</div>
+        <h2 class="activity-title">Взаимодействие с органами власти</h2>
+        <div class="content-divider"></div>
+        <p class="activity-text">
+          Совет ветеранов выстраивает конструктивный диалог с федеральными и региональными органами
+          государственной власти. Представители организации входят в состав общественных советов
+          при министерствах и ведомствах, участвуют в парламентских слушаниях и заседаниях
+          рабочих групп по вопросам социальной политики.
+        </p>
+        <p class="activity-text">
+          Налажено тесное партнёрство с Министерством обороны, МВД, Росгвардией и другими силовыми
+          структурами. Организация взаимодействует с Пенсионным фондом России, региональными
+          органами соцзащиты, учреждениями здравоохранения в интересах ветеранов.
+        </p>
+        <a href="/about" class="btn btn-activity mt-2">
+          <i class="fas fa-info-circle me-2"></i>Об организации
+        </a>
+      </div>
+      <div class="col-lg-5 order-2">
+        <div class="activity-img-wrap">
+          <div class="activity-img-placeholder" style="background: linear-gradient(135deg, #0F5132 0%, #198754 100%)">
+            <i class="fas fa-handshake"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="activity-divider">
+
+  <!-- Инициативы -->
+  <section id="initiatives" class="activity-section mb-5 pt-4">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-5 order-2 order-lg-1">
+        <div class="activity-img-wrap">
+          <div class="activity-img-placeholder" style="background: linear-gradient(135deg, #5A3E00 0%, #C4A020 100%)">
+            <i class="fas fa-lightbulb"></i>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-7 order-1 order-lg-2">
+        <div class="activity-label"><i class="fas fa-lightbulb me-2"></i>Инициативы</div>
+        <h2 class="activity-title">Общественные инициативы</h2>
+        <div class="content-divider"></div>
+        <p class="activity-text">
+          Организация выступает с законодательными и общественными инициативами, направленными
+          на улучшение качества жизни ветеранов. Предложения готовятся при участии экспертного
+          сообщества, юристов и самих ветеранов — людей, знающих проблему изнутри.
+        </p>
+        <p class="activity-text">
+          Среди реализованных инициатив — программы по развитию сети ветеранских клубов, проекты
+          доступной среды для маломобильных граждан, инициативы по увековечению памяти героев,
+          а также цифровые проекты для связи ветеранов по всей стране. Новые идеи от членов
+          организации приветствуются и поддерживаются.
+        </p>
+        <a href="/contacts" class="btn btn-activity mt-2">
+          <i class="fas fa-paper-plane me-2"></i>Предложить инициативу
+        </a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<%- include('partials/footer') %>
+
+<style>
+.activity-label {
+  font-size: 0.8rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--accent);
+  margin-bottom: 10px;
+}
+.activity-title {
+  font-size: 1.7rem; font-weight: 700;
+  color: var(--primary); line-height: 1.25;
+  margin-bottom: 0;
+}
+.activity-text {
+  color: #444; font-size: 1rem; line-height: 1.8;
+  margin-bottom: 12px;
+}
+.activity-img-wrap {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+.activity-img-placeholder {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+  height: 300px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 5rem; color: rgba(255,255,255,0.25);
+}
+.activity-divider {
+  border-color: rgba(27,58,107,0.12);
+  margin: 0 0 8px;
+}
+.btn-activity {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 11px 28px;
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+}
+.btn-activity:hover {
+  background: var(--accent);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(150,32,32,0.25);
+}
+</style>

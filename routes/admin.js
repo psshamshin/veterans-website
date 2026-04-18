@@ -228,4 +228,57 @@ router.post('/documents/:id/delete', requireAdmin, (req, res) => {
   res.redirect('/admin/documents');
 });
 
+// ─── SETTINGS ─────────────────────────────────────────────────────────────────
+
+router.get('/settings', requireAdmin, (req, res) => {
+  const logoRow = getOne("SELECT value FROM settings WHERE key = 'logo'");
+  res.render('admin/settings', {
+    title: 'Настройки',
+    currentLogo: logoRow ? logoRow.value : null,
+    adminUser: req.session.adminUser,
+  });
+});
+
+router.post('/settings/logo', requireAdmin, upload.single('logo'), (req, res) => {
+  if (!req.file) {
+    req.flash('error', 'Выберите файл логотипа');
+    return res.redirect('/admin/settings');
+  }
+  const logoPath = '/uploads/' + req.file.filename;
+  const existing = getOne("SELECT key FROM settings WHERE key = 'logo'");
+  if (existing) {
+    run("UPDATE settings SET value = ? WHERE key = 'logo'", [logoPath]);
+  } else {
+    run("INSERT INTO settings (key, value) VALUES ('logo', ?)", [logoPath]);
+  }
+  req.flash('success', 'Логотип обновлён');
+  res.redirect('/admin/settings');
+});
+
+router.post('/settings/logo/delete', requireAdmin, (req, res) => {
+  run("DELETE FROM settings WHERE key = 'logo'");
+  req.flash('success', 'Логотип удалён, восстановлен стандартный SVG');
+  res.redirect('/admin/settings');
+});
+
+router.post('/settings/password', requireAdmin, (req, res) => {
+  const { current_password, new_password, confirm_password } = req.body;
+  const admin = getOne('SELECT * FROM admins WHERE username = ?', [req.session.adminUser]);
+  if (!admin || admin.password !== current_password) {
+    req.flash('error', 'Неверный текущий пароль');
+    return res.redirect('/admin/settings');
+  }
+  if (new_password !== confirm_password) {
+    req.flash('error', 'Новые пароли не совпадают');
+    return res.redirect('/admin/settings');
+  }
+  if (new_password.length < 6) {
+    req.flash('error', 'Пароль должен содержать минимум 6 символов');
+    return res.redirect('/admin/settings');
+  }
+  run('UPDATE admins SET password = ? WHERE username = ?', [new_password, req.session.adminUser]);
+  req.flash('success', 'Пароль успешно изменён');
+  res.redirect('/admin/settings');
+});
+
 module.exports = router;

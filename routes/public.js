@@ -102,6 +102,11 @@ router.get('/gallery', (req, res) => {
   res.render('gallery', { title: 'Галерея', photos, activePage: 'gallery' });
 });
 
+// Activity
+router.get('/activity', (req, res) => {
+  res.render('activity', { title: 'Деятельность', activePage: 'activity' });
+});
+
 // Regions
 const regions = [
   { city: 'Москва',           name: 'Московский городской совет ветеранов',       address: 'ул. Новый Арбат, д. 36, Москва, 121205',                    phone: '+7 (495) 690-11-22', email: 'info@mosvet.ru',              website: 'https://mosvet.ru',           members: '18 400' },
