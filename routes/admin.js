@@ -189,6 +189,45 @@ router.post('/leaders/:id/delete', requireAdmin, (req, res) => {
   res.redirect('/admin/leaders');
 });
 
+// ─── REGIONS ──────────────────────────────────────────────────────────────────
+
+router.get('/regions', requireAdmin, (req, res) => {
+  const regions = getAll('SELECT * FROM regions ORDER BY sort_order ASC, city ASC');
+  res.render('admin/regions-list', { title: 'Региональные организации', regions });
+});
+
+router.get('/regions/new', requireAdmin, (req, res) => {
+  res.render('admin/regions-edit', { title: 'Добавить регион', item: null });
+});
+
+router.post('/regions/new', requireAdmin, (req, res) => {
+  const { city, name, address, phone, email, website, members, sort_order } = req.body;
+  run('INSERT INTO regions (city,name,address,phone,email,website,members,sort_order) VALUES (?,?,?,?,?,?,?,?)',
+      [city, name, address||'', phone||'', email||'', website||'', members||'', parseInt(sort_order)||0]);
+  req.flash('success', 'Регион добавлен');
+  res.redirect('/admin/regions');
+});
+
+router.get('/regions/:id/edit', requireAdmin, (req, res) => {
+  const item = getOne('SELECT * FROM regions WHERE id = ?', [req.params.id]);
+  if (!item) return res.redirect('/admin/regions');
+  res.render('admin/regions-edit', { title: 'Редактировать регион', item });
+});
+
+router.post('/regions/:id/edit', requireAdmin, (req, res) => {
+  const { city, name, address, phone, email, website, members, sort_order } = req.body;
+  run('UPDATE regions SET city=?,name=?,address=?,phone=?,email=?,website=?,members=?,sort_order=? WHERE id=?',
+      [city, name, address||'', phone||'', email||'', website||'', members||'', parseInt(sort_order)||0, req.params.id]);
+  req.flash('success', 'Регион обновлён');
+  res.redirect('/admin/regions');
+});
+
+router.post('/regions/:id/delete', requireAdmin, (req, res) => {
+  run('DELETE FROM regions WHERE id = ?', [req.params.id]);
+  req.flash('success', 'Регион удалён');
+  res.redirect('/admin/regions');
+});
+
 // ─── STAFF ────────────────────────────────────────────────────────────────────
 
 router.get('/staff', requireAdmin, (req, res) => {

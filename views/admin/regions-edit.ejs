@@ -1,0 +1,79 @@
+<%
+  locals.activePage = 'regions';
+  locals.flash_success = flash_success;
+  locals.flash_error = flash_error;
+%>
+<%- include('partials/admin-layout-top') %>
+
+<div class="page-header d-flex justify-content-between align-items-center mb-4">
+  <h2 class="page-title">
+    <i class="fas fa-<%= item ? 'edit' : 'plus' %> me-2"></i>
+    <%= item ? 'Редактировать регион' : 'Добавить регион' %>
+  </h2>
+  <a href="/admin/regions" class="btn btn-outline-secondary btn-sm">
+    <i class="fas fa-arrow-left me-1"></i>Назад
+  </a>
+</div>
+
+<div class="admin-card" style="max-width:760px">
+  <div class="admin-card-body">
+    <form action="/admin/regions/<%= item ? item.id + '/edit' : 'new' %>" method="POST">
+      <div class="row g-3">
+
+        <div class="col-md-6">
+          <label class="form-label fw-medium">Город / Регион <span class="text-danger">*</span></label>
+          <input type="text" name="city" class="form-control" required
+            value="<%= item ? item.city : '' %>" placeholder="Например: Москва">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-medium">Порядок сортировки</label>
+          <input type="number" name="sort_order" class="form-control" min="0"
+            value="<%= item ? item.sort_order : 0 %>">
+        </div>
+
+        <div class="col-12">
+          <label class="form-label fw-medium">Полное название организации <span class="text-danger">*</span></label>
+          <input type="text" name="name" class="form-control" required
+            value="<%= item ? item.name : '' %>" placeholder="Например: Московский городской совет ветеранов">
+        </div>
+
+        <div class="col-12">
+          <label class="form-label fw-medium">Адрес</label>
+          <input type="text" name="address" class="form-control"
+            value="<%= item ? item.address : '' %>" placeholder="ул. Примерная, д. 1, Город, индекс">
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-medium">Телефон</label>
+          <input type="text" name="phone" class="form-control"
+            value="<%= item ? item.phone : '' %>" placeholder="+7 (000) 000-00-00">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-medium">Членов организации</label>
+          <input type="text" name="members" class="form-control"
+            value="<%= item ? item.members : '' %>" placeholder="Например: 5 000">
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-medium">Email</label>
+          <input type="email" name="email" class="form-control"
+            value="<%= item ? item.email : '' %>" placeholder="info@example.ru">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-medium">Сайт</label>
+          <input type="url" name="website" class="form-control"
+            value="<%= item ? item.website : '' %>" placeholder="https://example.ru">
+        </div>
+
+      </div>
+      <div class="mt-4 d-flex gap-2">
+        <button type="submit" class="btn btn-danger">
+          <i class="fas fa-save me-1"></i><%= item ? 'Сохранить' : 'Добавить' %>
+        </button>
+        <a href="/admin/regions" class="btn btn-outline-secondary">Отмена</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include('partials/admin-layout-bottom') %>
