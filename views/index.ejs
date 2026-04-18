@@ -3,13 +3,33 @@
 <!-- Hero Banner -->
 <section class="hero-section">
   <div class="hero-overlay">
-    <div class="container h-100 d-flex align-items-center">
-      <div class="hero-content">
-        <h1 class="hero-title">Совет ветеранов России</h1>
-        <p class="hero-subtitle">Всероссийская общественная организация ветеранов (пенсионеров) войны, труда, Вооружённых Сил и правоохранительных органов</p>
-        <div class="hero-buttons">
-          <a href="/about" class="btn btn-hero-primary">О нас</a>
-          <a href="/contacts" class="btn btn-hero-secondary">Связаться с нами</a>
+    <div class="container">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-6">
+          <div class="hero-content" style="padding:60px 0">
+            <h1 class="hero-title">Всероссийская общественная организация ветеранов</h1>
+            <p class="hero-subtitle">(пенсионеров) войны, труда, Вооружённых Сил и правоохранительных органов</p>
+            <div class="hero-buttons">
+              <a href="/about" class="btn btn-hero-primary">О нас</a>
+              <a href="/contacts" class="btn btn-hero-secondary">Связаться с нами</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 d-none d-lg-flex justify-content-center align-items-center py-4">
+          <div class="hero-stack">
+            <% const stackPhotos = galleryPhotos.slice(0, 3); %>
+            <% for (let i = 0; i < 3; i++) { %>
+            <div class="hero-stack-card hero-stack-card-<%= i+1 %>">
+              <% if (stackPhotos[i]) { %>
+                <a href="/news/<%= stackPhotos[i].id %>">
+                  <img src="<%= stackPhotos[i].image %>" alt="<%= stackPhotos[i].title %>">
+                </a>
+              <% } else { %>
+                <div class="hero-stack-placeholder"></div>
+              <% } %>
+            </div>
+            <% } %>
+          </div>
         </div>
       </div>
     </div>
