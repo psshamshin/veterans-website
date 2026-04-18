@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
 // About
 router.get('/about', (req, res) => {
   const chairman = getOne('SELECT * FROM leaders ORDER BY sort_order ASC LIMIT 1');
-  const bureau   = getAll('SELECT * FROM leaders ORDER BY sort_order ASC OFFSET 1');
+  const bureau   = getAll('SELECT * FROM leaders ORDER BY sort_order ASC LIMIT -1 OFFSET 1');
   const getSetting = key => { const r = getOne('SELECT value FROM settings WHERE key = ?', [key]); return r ? r.value : null; };
   const structureImage = getSetting('about_structure_image');
   res.render('about', { title: 'Об организации', activePage: 'about', chairman, bureau, structureImage });
