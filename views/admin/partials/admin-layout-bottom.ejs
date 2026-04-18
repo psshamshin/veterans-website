@@ -124,7 +124,10 @@
     const ext = origName.split('.').pop().toLowerCase();
     const isPng = (ext === 'png');
     const mime = isPng ? 'image/png' : 'image/jpeg';
-    const canvas = cropper.getCroppedCanvas({ maxWidth: 2000, maxHeight: 2000, fillColor: isPng ? 'transparent' : '#fff' });
+    const cropRatio = activeInput.dataset.cropRatio;
+    const canvasOpts = { maxWidth: 2000, maxHeight: 2000, fillColor: isPng ? 'transparent' : '#fff' };
+    if (cropRatio === '1') { canvasOpts.width = 800; canvasOpts.height = 800; }
+    const canvas = cropper.getCroppedCanvas(canvasOpts);
     canvas.toBlob(function(blob) {
       const croppedFile = new File([blob], origName, { type: mime });
 
