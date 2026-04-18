@@ -145,7 +145,7 @@
     </div>
 
     <!-- Бюро Центрального Совета -->
-    <div class="governing-block">
+    <div class="governing-block mb-5">
       <h3 class="governing-title"><span class="governing-num">03</span>Бюро Центрального Совета</h3>
       <p class="about-text mt-1 mb-4">
         Бюро Центрального Совета осуществляет оперативное руководство деятельностью организации
@@ -175,6 +175,44 @@
       <div class="empty-state">
         <i class="fas fa-users fa-2x text-muted mb-2"></i>
         <p>Добавьте членов через <a href="/admin/leaders">панель управления</a></p>
+      </div>
+      <% } %>
+    </div>
+
+    <!-- Аппарат организации -->
+    <div class="governing-block">
+      <h3 class="governing-title"><span class="governing-num">04</span>Аппарат организации</h3>
+      <p class="about-text mt-1 mb-4">
+        Аппарат организации обеспечивает организационную, правовую и информационно-аналитическую
+        деятельность, координирует работу структурных подразделений и региональных советов.
+      </p>
+      <% if (staff && staff.length > 0) { %>
+      <div class="row g-4">
+        <% staff.forEach(member => { %>
+        <div class="col-lg-4 col-md-6">
+          <div class="staff-card">
+            <div class="staff-photo-wrap">
+              <% if (member.photo) { %>
+                <img src="<%= member.photo %>" alt="<%= member.name %>" class="staff-photo">
+              <% } else { %>
+                <div class="staff-photo-placeholder"><i class="fas fa-user-tie"></i></div>
+              <% } %>
+            </div>
+            <div class="staff-info">
+              <div class="staff-name"><%= member.name %></div>
+              <div class="staff-position"><%= member.position %></div>
+              <% if (member.bio) { %>
+              <p class="staff-bio"><%= member.bio %></p>
+              <% } %>
+            </div>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+      <% } else { %>
+      <div class="empty-state">
+        <i class="fas fa-user-tie fa-2x text-muted mb-2"></i>
+        <p>Добавьте сотрудников через <a href="/admin/leaders">панель управления</a> с ролью «Аппарат»</p>
       </div>
       <% } %>
     </div>
@@ -294,4 +332,25 @@
 .bureau-info { padding: 12px 14px 16px; }
 .bureau-name { font-size: 0.88rem; font-weight: 700; color: var(--primary); line-height: 1.3; margin-bottom: 4px; }
 .bureau-position { font-size: 0.76rem; color: var(--text-muted); line-height: 1.3; }
+
+/* Staff */
+.staff-card {
+  display: flex; gap: 16px; align-items: flex-start;
+  background: #fff; border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 20px;
+  border: 1px solid rgba(27,58,107,0.06);
+  transition: transform var(--transition), box-shadow var(--transition);
+  height: 100%;
+}
+.staff-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+.staff-photo { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); flex-shrink: 0; }
+.staff-photo-placeholder {
+  width: 72px; height: 72px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.5); font-size: 1.6rem;
+}
+.staff-name { font-size: 0.95rem; font-weight: 700; color: var(--primary); margin-bottom: 3px; }
+.staff-position { font-size: 0.8rem; color: var(--accent); font-weight: 600; margin-bottom: 6px; }
+.staff-bio { font-size: 0.82rem; color: var(--text-muted); line-height: 1.55; margin: 0; }
 </style>

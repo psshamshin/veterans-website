@@ -102,6 +102,9 @@ function initDatabase() {
     );
   `);
 
+  // Migrate leaders: add role column if missing
+  try { db.exec(`ALTER TABLE leaders ADD COLUMN role TEXT DEFAULT 'bureau'`); } catch (_) {}
+
   // Seed admin
   if (!getOne('SELECT id FROM admins WHERE username = ?', ['admin'])) {
     run('INSERT INTO admins (username, password) VALUES (?, ?)', ['admin', 'admin123']);

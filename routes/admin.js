@@ -159,10 +159,10 @@ router.get('/leaders/new', requireAdmin, (req, res) => {
 });
 
 router.post('/leaders/new', requireAdmin, upload.single('photo'), (req, res) => {
-  const { name, position, bio, sort_order } = req.body;
+  const { name, position, bio, sort_order, role } = req.body;
   const photo = req.file ? '/uploads/' + req.file.filename : null;
-  run('INSERT INTO leaders (name, position, bio, photo, sort_order) VALUES (?, ?, ?, ?, ?)',
-      [name, position, bio || '', photo, parseInt(sort_order) || 0]);
+  run('INSERT INTO leaders (name, position, bio, photo, sort_order, role) VALUES (?, ?, ?, ?, ?, ?)',
+      [name, position, bio || '', photo, parseInt(sort_order) || 0, role || 'bureau']);
   req.flash('success', 'Руководитель добавлен');
   res.redirect('/admin/leaders');
 });
@@ -174,11 +174,11 @@ router.get('/leaders/:id/edit', requireAdmin, (req, res) => {
 });
 
 router.post('/leaders/:id/edit', requireAdmin, upload.single('photo'), (req, res) => {
-  const { name, position, bio, sort_order } = req.body;
+  const { name, position, bio, sort_order, role } = req.body;
   const existing = getOne('SELECT * FROM leaders WHERE id = ?', [req.params.id]);
   const photo = req.file ? '/uploads/' + req.file.filename : existing.photo;
-  run('UPDATE leaders SET name=?, position=?, bio=?, photo=?, sort_order=? WHERE id=?',
-      [name, position, bio || '', photo, parseInt(sort_order) || 0, req.params.id]);
+  run('UPDATE leaders SET name=?, position=?, bio=?, photo=?, sort_order=?, role=? WHERE id=?',
+      [name, position, bio || '', photo, parseInt(sort_order) || 0, role || 'bureau', req.params.id]);
   req.flash('success', 'Руководитель обновлён');
   res.redirect('/admin/leaders');
 });

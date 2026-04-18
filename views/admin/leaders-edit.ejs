@@ -25,6 +25,14 @@
             value="<%= item ? item.name : '' %>" placeholder="Фамилия Имя Отчество">
         </div>
         <div class="col-md-4">
+          <label class="form-label fw-medium">Роль</label>
+          <select name="role" class="form-select">
+            <option value="bureau"   <%= (!item || item.role === 'bureau')    ? 'selected' : '' %>>Бюро Центрального Совета</option>
+            <option value="chairman" <%= (item && item.role === 'chairman')   ? 'selected' : '' %>>Председатель (Съезд)</option>
+            <option value="staff"    <%= (item && item.role === 'staff')      ? 'selected' : '' %>>Аппарат организации</option>
+          </select>
+        </div>
+        <div class="col-md-4">
           <label class="form-label fw-medium">Порядок сортировки</label>
           <input type="number" name="sort_order" class="form-control"
             value="<%= item ? item.sort_order : 0 %>" min="0">
