@@ -1,0 +1,62 @@
+<%
+  locals.activePage = 'staff';
+%>
+<%- include('partials/admin-layout-top') %>
+
+<div class="page-header d-flex justify-content-between align-items-center mb-4">
+  <h2 class="page-title"><i class="fas fa-user-tie me-2"></i>Аппарат организации</h2>
+  <a href="/admin/staff/new" class="btn btn-danger btn-sm">
+    <i class="fas fa-plus me-1"></i>Добавить сотрудника
+  </a>
+</div>
+
+<div class="admin-card">
+  <div class="admin-card-body p-0">
+    <% if (staff && staff.length > 0) { %>
+    <table class="table table-hover mb-0">
+      <thead><tr>
+        <th style="width:60px">Фото</th>
+        <th>ФИО</th>
+        <th>Должность</th>
+        <th style="width:60px">Порядок</th>
+        <th style="width:100px"></th>
+      </tr></thead>
+      <tbody>
+        <% staff.forEach(s => { %>
+        <tr>
+          <td>
+            <% if (s.photo) { %>
+              <img src="<%= s.photo %>" class="rounded-circle" style="width:40px;height:40px;object-fit:cover">
+            <% } else { %>
+              <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center" style="width:40px;height:40px;color:#fff;font-size:1rem"><i class="fas fa-user-tie"></i></div>
+            <% } %>
+          </td>
+          <td class="fw-medium"><%= s.name %></td>
+          <td class="text-muted small"><%= s.position %></td>
+          <td><%= s.sort_order %></td>
+          <td>
+            <a href="/admin/staff/<%= s.id %>/edit" class="btn btn-sm btn-outline-secondary me-1">
+              <i class="fas fa-edit"></i>
+            </a>
+            <form action="/admin/staff/<%= s.id %>/delete" method="POST" class="d-inline"
+              onsubmit="return confirm('Удалить?')">
+              <button type="submit" class="btn btn-sm btn-outline-danger">
+                <i class="fas fa-trash"></i>
+              </button>
+            </form>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+    <% } else { %>
+    <div class="empty-state">
+      <i class="fas fa-user-tie fa-3x text-muted mb-3"></i>
+      <p>Сотрудников аппарата пока нет</p>
+      <a href="/admin/staff/new" class="btn btn-danger btn-sm">Добавить первого</a>
+    </div>
+    <% } %>
+  </div>
+</div>
+
+<%- include('partials/admin-layout-bottom') %>

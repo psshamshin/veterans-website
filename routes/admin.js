@@ -189,6 +189,48 @@ router.post('/leaders/:id/delete', requireAdmin, (req, res) => {
   res.redirect('/admin/leaders');
 });
 
+// ─── STAFF ────────────────────────────────────────────────────────────────────
+
+router.get('/staff', requireAdmin, (req, res) => {
+  const staff = getAll('SELECT * FROM staff ORDER BY sort_order ASC');
+  res.render('admin/staff-list', { title: 'Аппарат организации', staff });
+});
+
+router.get('/staff/new', requireAdmin, (req, res) => {
+  res.render('admin/staff-edit', { title: 'Добавить сотрудника', item: null });
+});
+
+router.post('/staff/new', requireAdmin, upload.single('photo'), (req, res) => {
+  const { name, position, bio, sort_order } = req.body;
+  const photo = req.file ? '/uploads/' + req.file.filename : null;
+  run('INSERT INTO staff (name, position, bio, photo, sort_order) VALUES (?, ?, ?, ?, ?)',
+      [name, position, bio || '', photo, parseInt(sort_order) || 0]);
+  req.flash('success', 'Сотрудник добавлен');
+  res.redirect('/admin/staff');
+});
+
+router.get('/staff/:id/edit', requireAdmin, (req, res) => {
+  const item = getOne('SELECT * FROM staff WHERE id = ?', [req.params.id]);
+  if (!item) return res.redirect('/admin/staff');
+  res.render('admin/staff-edit', { title: 'Редактировать сотрудника', item });
+});
+
+router.post('/staff/:id/edit', requireAdmin, upload.single('photo'), (req, res) => {
+  const { name, position, bio, sort_order } = req.body;
+  const existing = getOne('SELECT * FROM staff WHERE id = ?', [req.params.id]);
+  const photo = req.file ? '/uploads/' + req.file.filename : existing.photo;
+  run('UPDATE staff SET name=?, position=?, bio=?, photo=?, sort_order=? WHERE id=?',
+      [name, position, bio || '', photo, parseInt(sort_order) || 0, req.params.id]);
+  req.flash('success', 'Сотрудник обновлён');
+  res.redirect('/admin/staff');
+});
+
+router.post('/staff/:id/delete', requireAdmin, (req, res) => {
+  run('DELETE FROM staff WHERE id = ?', [req.params.id]);
+  req.flash('success', 'Сотрудник удалён');
+  res.redirect('/admin/staff');
+});
+
 // ─── MESSAGES ─────────────────────────────────────────────────────────────────
 
 router.get('/messages', requireAdmin, (req, res) => {
