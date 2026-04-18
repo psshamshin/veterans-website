@@ -6,7 +6,11 @@ const { getOne, getAll, run } = require('../database');
 router.get('/', (req, res) => {
   const news = getAll('SELECT * FROM news WHERE is_published = 1 ORDER BY published_at DESC LIMIT 6');
   const galleryPhotos = getAll(`SELECT id, title, image FROM news WHERE is_published = 1 AND image IS NOT NULL AND image != '' ORDER BY published_at DESC LIMIT 6`);
-  res.render('index', { title: 'Главная', news, galleryPhotos, activePage: 'home' });
+  const getSetting = key => { const r = getOne('SELECT value FROM settings WHERE key = ?', [key]); return r ? r.value : null; };
+  const heroSlide1 = getSetting('hero_slide_1');
+  const heroSlide2 = getSetting('hero_slide_2');
+  const heroSlide3 = getSetting('hero_slide_3');
+  res.render('index', { title: 'Главная', news, galleryPhotos, heroSlide1, heroSlide2, heroSlide3, activePage: 'home' });
 });
 
 // About

@@ -58,6 +58,52 @@
     </div>
   </div>
 
+  <!-- Hero slides -->
+  <div class="col-12">
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <h5 class="mb-0"><i class="fas fa-images me-2"></i>Слайды на главной странице</h5>
+      </div>
+      <div class="admin-card-body">
+        <div class="row g-4">
+          <% [1,2,3].forEach(n => { %>
+          <div class="col-md-4">
+            <div class="p-3 rounded" style="background:#f5f5f7;border:1px solid #e0e0e0">
+              <div class="fw-medium mb-2">Слайд <%= n %></div>
+              <% const slide = heroSlides['hero_slide_' + n]; %>
+              <% if (slide) { %>
+                <img src="<%= slide %>" alt="Слайд <%= n %>" class="img-fluid rounded mb-2" style="height:100px;width:100%;object-fit:cover">
+              <% } else { %>
+                <div class="mb-2 rounded d-flex align-items-center justify-content-center text-muted"
+                  style="height:100px;background:#e8e8e8;border:2px dashed #ccc">
+                  <i class="fas fa-image fa-2x"></i>
+                </div>
+              <% } %>
+              <form action="/admin/settings/hero/<%= n %>" method="POST" enctype="multipart/form-data">
+                <input type="file" name="slide" class="form-control form-control-sm mb-2" accept="image/*"
+                  data-crop-ratio="16/9" data-preview-id="slidePreview<%= n %>">
+                <img id="slidePreview<%= n %>" src="" alt="" class="img-fluid rounded mb-2" style="display:none;max-height:80px">
+                <button type="submit" class="btn btn-danger btn-sm w-100">
+                  <i class="fas fa-upload me-1"></i>Загрузить
+                </button>
+              </form>
+              <% if (slide) { %>
+              <form action="/admin/settings/hero/<%= n %>/delete" method="POST" class="mt-2">
+                <button type="submit" class="btn btn-outline-secondary btn-sm w-100"
+                  onclick="return confirm('Удалить слайд?')">
+                  <i class="fas fa-trash me-1"></i>Удалить
+                </button>
+              </form>
+              <% } %>
+            </div>
+          </div>
+          <% }) %>
+        </div>
+        <div class="form-text mt-2">Рекомендуемый формат: JPG, соотношение сторон 16:9, минимум 800×450px</div>
+      </div>
+    </div>
+  </div>
+
   <!-- Password change -->
   <div class="col-lg-6">
     <div class="admin-card">

@@ -230,11 +230,20 @@ router.post('/documents/:id/delete', requireAdmin, (req, res) => {
 
 // ─── SETTINGS ─────────────────────────────────────────────────────────────────
 
+function getSetting(key) { const r = getOne('SELECT value FROM settings WHERE key = ?', [key]); return r ? r.value : null; }
+function setSetting(key, value) {
+  if (getOne('SELECT key FROM settings WHERE key = ?', [key])) {
+    run('UPDATE settings SET value = ? WHERE key = ?', [value, key]);
+  } else {
+    run('INSERT INTO settings (key, value) VALUES (?, ?)', [key, value]);
+  }
+}
+
 router.get('/settings', requireAdmin, (req, res) => {
-  const logoRow = getOne("SELECT value FROM settings WHERE key = 'logo'");
   res.render('admin/settings', {
     title: 'Настройки',
-    currentLogo: logoRow ? logoRow.value : null,
+    currentLogo: getSetting('logo'),
+    heroSlides: { hero_slide_1: getSetting('hero_slide_1'), hero_slide_2: getSetting('hero_slide_2'), hero_slide_3: getSetting('hero_slide_3') },
     adminUser: req.session.adminUser,
   });
 });
@@ -258,6 +267,24 @@ router.post('/settings/logo', requireAdmin, upload.single('logo'), (req, res) =>
 router.post('/settings/logo/delete', requireAdmin, (req, res) => {
   run("DELETE FROM settings WHERE key = 'logo'");
   req.flash('success', 'Логотип удалён, восстановлен стандартный SVG');
+  res.redirect('/admin/settings');
+});
+
+router.post('/settings/hero/:n', requireAdmin, upload.single('slide'), (req, res) => {
+  const n = parseInt(req.params.n);
+  if (![1,2,3].includes(n) || !req.file) {
+    req.flash('error', 'Выберите файл');
+    return res.redirect('/admin/settings');
+  }
+  setSetting('hero_slide_' + n, '/uploads/' + req.file.filename);
+  req.flash('success', 'Слайд ' + n + ' обновлён');
+  res.redirect('/admin/settings');
+});
+
+router.post('/settings/hero/:n/delete', requireAdmin, (req, res) => {
+  const n = parseInt(req.params.n);
+  if ([1,2,3].includes(n)) run('DELETE FROM settings WHERE key = ?', ['hero_slide_' + n]);
+  req.flash('success', 'Слайд удалён');
   res.redirect('/admin/settings');
 });
 

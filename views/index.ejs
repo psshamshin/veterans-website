@@ -15,18 +15,37 @@
             </div>
           </div>
         </div>
-        <div class="col-lg-6 d-none d-lg-flex justify-content-center align-items-center py-4">
-          <div class="hero-stack">
-            <% const stackPhotos = galleryPhotos.slice(0, 3); %>
-            <% for (let i = 0; i < 3; i++) { %>
-            <div class="hero-stack-card hero-stack-card-<%= i+1 %>">
-              <% if (stackPhotos[i]) { %>
-                <a href="/news/<%= stackPhotos[i].id %>">
-                  <img src="<%= stackPhotos[i].image %>" alt="<%= stackPhotos[i].title %>">
-                </a>
+        <div class="col-lg-6 d-none d-lg-block py-4">
+          <div id="heroCarousel" class="carousel slide hero-carousel" data-bs-ride="carousel" data-bs-interval="4000">
+            <div class="carousel-inner">
+              <% const heroSlides = [heroSlide1, heroSlide2, heroSlide3].filter(Boolean); %>
+              <% if (heroSlides.length > 0) { %>
+                <% heroSlides.forEach((slide, i) => { %>
+                <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
+                  <img src="<%= slide %>" alt="Слайд <%= i+1 %>" class="hero-carousel-img">
+                </div>
+                <% }) %>
               <% } else { %>
-                <div class="hero-stack-placeholder"></div>
+                <div class="carousel-item active">
+                  <div class="hero-carousel-placeholder">
+                    <i class="fas fa-image"></i>
+                    <span>Загрузите фотографии в настройках</span>
+                  </div>
+                </div>
               <% } %>
+            </div>
+            <% if (heroSlides.length > 1) { %>
+            <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+              <span class="carousel-control-next-icon"></span>
+            </button>
+            <div class="carousel-indicators hero-carousel-indicators">
+              <% heroSlides.forEach((_, i) => { %>
+              <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="<%= i %>"
+                class="<%= i === 0 ? 'active' : '' %>"></button>
+              <% }) %>
             </div>
             <% } %>
           </div>
