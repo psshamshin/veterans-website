@@ -49,14 +49,10 @@
           <% } %>
         </div>
         <div class="logo-text">
-          <div class="logo-title">ВООВВС и ПО</div>
-          <div class="logo-subtitle">Совет ветеранов России</div>
+          <div class="logo-title">Всероссийская общественная организация ветеранов</div>
+          <div class="logo-subtitle">(пенсионеров) войны, труда, Вооружённых Сил и правоохранительных органов</div>
         </div>
       </a>
-      <div class="header-info text-end d-none d-lg-block">
-        <div class="header-slogan">Честь. Память. Долг.</div>
-        <div class="header-desc" style="font-size:0.72rem;max-width:320px">Всероссийская общественная организация ветеранов (пенсионеров) войны, труда, Вооружённых Сил и правоохранительных органов</div>
-      </div>
     </div>
   </div>
 </header>
@@ -85,20 +81,9 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link <%= activePage === 'media' ? 'active' : '' %>" href="/media">
-            <i class="fas fa-photo-video"></i> СМИ
-          </a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle <%= activePage === 'activity' ? 'active' : '' %>" href="/activity" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <a class="nav-link <%= activePage === 'activity' ? 'active' : '' %>" href="/activity">
             <i class="fas fa-hands-helping"></i> Деятельность
           </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/activity#social"><i class="fas fa-heart"></i> Социальная защита</a></li>
-            <li><a class="dropdown-item" href="/activity#patriotic"><i class="fas fa-flag"></i> Патриотическое воспитание</a></li>
-            <li><a class="dropdown-item" href="/activity#cooperation"><i class="fas fa-handshake"></i> Взаимодействие</a></li>
-            <li><a class="dropdown-item" href="/activity#initiatives"><i class="fas fa-lightbulb"></i> Инициативы</a></li>
-          </ul>
         </li>
         <li class="nav-item">
           <a class="nav-link <%= activePage === 'gallery' ? 'active' : '' %>" href="/gallery">
