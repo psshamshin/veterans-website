@@ -62,6 +62,15 @@
       const file = this.files[0];
       if (!file.type.startsWith('image/')) return;
 
+      // Logo inputs (data-no-crop) — just show preview, skip cropper
+      if (this.dataset.noCrop !== undefined) {
+        if (preview) {
+          preview.src = URL.createObjectURL(file);
+          preview.style.display = 'block';
+        }
+        return;
+      }
+
       activeInput = this;
       const ratio = this.dataset.cropRatio;
       const url = URL.createObjectURL(file);
@@ -111,11 +120,12 @@
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Обработка...';
 
-    const canvas = cropper.getCroppedCanvas({ maxWidth: 2000, maxHeight: 2000, fillColor: '#fff' });
+    const origName = activeInput.files[0].name;
+    const ext = origName.split('.').pop().toLowerCase();
+    const isPng = (ext === 'png');
+    const mime = isPng ? 'image/png' : 'image/jpeg';
+    const canvas = cropper.getCroppedCanvas({ maxWidth: 2000, maxHeight: 2000, fillColor: isPng ? 'transparent' : '#fff' });
     canvas.toBlob(function(blob) {
-      const origName = activeInput.files[0].name;
-      const ext = origName.split('.').pop().toLowerCase();
-      const mime = (ext === 'png') ? 'image/png' : 'image/jpeg';
       const croppedFile = new File([blob], origName, { type: mime });
 
       const dt = new DataTransfer();
