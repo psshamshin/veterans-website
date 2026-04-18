@@ -66,42 +66,42 @@
     <div class="collapse navbar-collapse" id="mainNav">
       <ul class="navbar-nav me-auto">
         <li class="nav-item">
-          <a class="nav-link <%= activePage === 'home' ? 'active' : '' %>" href="/">
+          <a class="nav-link <%= locals.activePage === 'home' ? 'active' : '' %>" href="/">
             <i class="fas fa-home"></i> Главная
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link <%= activePage === 'about' ? 'active' : '' %>" href="/about">
+          <a class="nav-link <%= locals.activePage === 'about' ? 'active' : '' %>" href="/about">
             <i class="fas fa-info-circle"></i> Об организации
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link <%= activePage === 'news' ? 'active' : '' %>" href="/news">
+          <a class="nav-link <%= locals.activePage === 'news' ? 'active' : '' %>" href="/news">
             <i class="fas fa-newspaper"></i> Новости
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link <%= activePage === 'activity' ? 'active' : '' %>" href="/activity">
+          <a class="nav-link <%= locals.activePage === 'activity' ? 'active' : '' %>" href="/activity">
             <i class="fas fa-hands-helping"></i> Деятельность
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link <%= activePage === 'gallery' ? 'active' : '' %>" href="/gallery">
+          <a class="nav-link <%= locals.activePage === 'gallery' ? 'active' : '' %>" href="/gallery">
             <i class="fas fa-images"></i> Галерея
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link <%= activePage === 'regions' ? 'active' : '' %>" href="/regions">
+          <a class="nav-link <%= locals.activePage === 'regions' ? 'active' : '' %>" href="/regions">
             <i class="fas fa-map-marked-alt"></i> Региональные организации
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link <%= activePage === 'documents' ? 'active' : '' %>" href="/documents">
+          <a class="nav-link <%= locals.activePage === 'documents' ? 'active' : '' %>" href="/documents">
             <i class="fas fa-file-alt"></i> Документы
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link <%= activePage === 'contacts' ? 'active' : '' %>" href="/contacts">
+          <a class="nav-link <%= locals.activePage === 'contacts' ? 'active' : '' %>" href="/contacts">
             <i class="fas fa-map-marker-alt"></i> Контакты
           </a>
         </li>
