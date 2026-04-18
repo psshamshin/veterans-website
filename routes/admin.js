@@ -244,6 +244,7 @@ router.get('/settings', requireAdmin, (req, res) => {
     title: 'Настройки',
     currentLogo: getSetting('logo'),
     heroSlides: { hero_slide_1: getSetting('hero_slide_1'), hero_slide_2: getSetting('hero_slide_2'), hero_slide_3: getSetting('hero_slide_3') },
+    structureImage: getSetting('about_structure_image'),
     adminUser: req.session.adminUser,
   });
 });
@@ -267,6 +268,19 @@ router.post('/settings/logo', requireAdmin, upload.single('logo'), (req, res) =>
 router.post('/settings/logo/delete', requireAdmin, (req, res) => {
   run("DELETE FROM settings WHERE key = 'logo'");
   req.flash('success', 'Логотип удалён, восстановлен стандартный SVG');
+  res.redirect('/admin/settings');
+});
+
+router.post('/settings/about-structure', requireAdmin, upload.single('image'), (req, res) => {
+  if (!req.file) { req.flash('error', 'Выберите файл'); return res.redirect('/admin/settings'); }
+  setSetting('about_structure_image', '/uploads/' + req.file.filename);
+  req.flash('success', 'Изображение структуры обновлено');
+  res.redirect('/admin/settings');
+});
+
+router.post('/settings/about-structure/delete', requireAdmin, (req, res) => {
+  run("DELETE FROM settings WHERE key = 'about_structure_image'");
+  req.flash('success', 'Изображение удалено');
   res.redirect('/admin/settings');
 });
 
