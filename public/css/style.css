@@ -867,16 +867,20 @@ html { scroll-behavior: smooth; }
 }
 .hero-carousel-placeholder i { font-size: 3rem; }
 .hero-carousel-indicators {
-  bottom: 10px;
+  bottom: 12px;
 }
 .hero-carousel-indicators button {
-  width: 8px; height: 8px;
-  border-radius: 50%;
+  width: 24px; height: 6px;
+  border-radius: 3px;
   border: none;
-  opacity: 0.5;
+  opacity: 0.45;
   background: #fff;
+  transition: width 0.3s ease, opacity 0.3s ease;
 }
-.hero-carousel-indicators button.active { opacity: 1; }
+.hero-carousel-indicators button.active {
+  width: 36px;
+  opacity: 1;
+}
 
 /* ===== NAV DROPDOWN ===== */
 .main-nav .dropdown-menu {

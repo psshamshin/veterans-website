@@ -48,8 +48,10 @@
           <div class="mb-3">
             <label class="form-label fw-medium">Категория</label>
             <select name="category" class="form-select">
-              <option value="Новости организации" <%= (!item || item.category === 'Новости организации') ? 'selected' : '' %>>Новости организации</option>
-              <option value="Новости в регионах" <%= (item && item.category === 'Новости в регионах') ? 'selected' : '' %>>Новости в регионах</option>
+              <option value="Новости организации"  <%= (!item || item.category === 'Новости организации')  ? 'selected' : '' %>>Новости организации</option>
+              <option value="Новости в регионах"  <%= (item && item.category === 'Новости в регионах')  ? 'selected' : '' %>>Новости в регионах</option>
+              <option value="Газета Ветеран"       <%= (item && item.category === 'Газета Ветеран')       ? 'selected' : '' %>>Газета Ветеран</option>
+              <option value="Конкурсы/Смотры"      <%= (item && item.category === 'Конкурсы/Смотры')      ? 'selected' : '' %>>Конкурсы/Смотры</option>
             </select>
           </div>
           <div class="mb-3">

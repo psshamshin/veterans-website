@@ -4,7 +4,7 @@ const { getOne, getAll, run } = require('../database');
 
 // Home page
 router.get('/', (req, res) => {
-  const news = getAll('SELECT * FROM news WHERE is_published = 1 ORDER BY published_at DESC LIMIT 6');
+  const news = getAll('SELECT * FROM news WHERE is_published = 1 ORDER BY published_at DESC');
   const galleryPhotos = getAll(`SELECT id, title, image FROM news WHERE is_published = 1 AND image IS NOT NULL AND image != '' ORDER BY published_at DESC LIMIT 6`);
   const getSetting = key => { const r = getOne('SELECT value FROM settings WHERE key = ?', [key]); return r ? r.value : null; };
   const heroSlide1 = getSetting('hero_slide_1');

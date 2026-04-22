@@ -128,9 +128,9 @@
         </div>
 
         <!-- News grid -->
-        <div class="row g-3">
-          <% news.slice(1).forEach(item => { %>
-          <div class="col-md-6">
+        <div class="row g-3" id="newsGrid">
+          <% news.slice(1).forEach((item, idx) => { %>
+          <div class="col-md-6 news-extra-item" style="<%= idx >= 5 ? 'display:none' : '' %>">
             <div class="card news-card h-100">
               <% if (item.image) { %>
               <img src="<%= item.image %>" alt="<%= item.title %>" class="card-img-top news-card-img-sm">
@@ -155,6 +155,15 @@
           </div>
           <% }) %>
         </div>
+
+        <% if (news.length > 6) { %>
+        <div class="text-center mt-4" id="loadMoreWrap">
+          <button class="btn btn-load-more" id="loadMoreBtn" onclick="loadMoreNews()">
+            <i class="fas fa-chevron-down me-2"></i>Загрузить ещё
+            <span class="load-more-count">(<%= news.length - 6 %> новостей)</span>
+          </button>
+        </div>
+        <% } %>
 
       <% } else { %>
         <div class="empty-state">
@@ -237,5 +246,41 @@
     </div>
   </div>
 </div>
+
+<style>
+.btn-load-more {
+  background: #fff;
+  border: 2px solid var(--primary);
+  color: var(--primary);
+  padding: 10px 32px;
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: background var(--transition), color var(--transition), transform var(--transition), box-shadow var(--transition);
+}
+.btn-load-more:hover {
+  background: var(--primary);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(27,58,107,0.2);
+}
+.load-more-count { font-weight: 400; opacity: 0.7; font-size: 0.85em; }
+</style>
+
+<script>
+function loadMoreNews() {
+  const hidden = document.querySelectorAll('.news-extra-item[style*="display:none"]');
+  let shown = 0;
+  hidden.forEach(function(el) {
+    if (shown < 6) { el.style.display = ''; shown++; }
+  });
+  const remaining = document.querySelectorAll('.news-extra-item[style*="display:none"]').length;
+  if (remaining === 0) {
+    document.getElementById('loadMoreWrap').style.display = 'none';
+  } else {
+    document.querySelector('.load-more-count').textContent = '(' + remaining + ' новостей)';
+  }
+}
+</script>
 
 <%- include('partials/footer') %>
