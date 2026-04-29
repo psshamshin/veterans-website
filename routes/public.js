@@ -117,8 +117,17 @@ router.get('/activity', (req, res) => {
 });
 
 router.get('/regions', (req, res) => {
-  const regions = getAll('SELECT * FROM regions ORDER BY sort_order ASC, city ASC');
-  res.render('regions', { title: 'Региональные организации', regions, activePage: 'regions' });
+  const all = getAll('SELECT * FROM regions ORDER BY city ASC');
+  const groupDefs = [
+    { key: 'federal',  label: 'Города федерального значения' },
+    { key: 'republic', label: 'Республиканские организации' },
+    { key: 'krai',     label: 'Краевые организации' },
+    { key: 'oblast',   label: 'Областные организации' },
+  ];
+  const grouped = groupDefs
+    .map(g => ({ ...g, items: all.filter(r => r.type === g.key) }))
+    .filter(g => g.items.length > 0);
+  res.render('regions', { title: 'Региональные организации', grouped, total: all.length, activePage: 'regions' });
 });
 
 module.exports = router;

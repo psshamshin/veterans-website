@@ -124,6 +124,32 @@ function initDatabase() {
   // Migrate leaders: add role column if missing
   try { db.exec(`ALTER TABLE leaders ADD COLUMN role TEXT DEFAULT 'bureau'`); } catch (_) {}
 
+  // Migrate regions: add type, short_name, chairman
+  try { db.exec(`ALTER TABLE regions ADD COLUMN type TEXT DEFAULT 'oblast'`); } catch (_) {}
+  try { db.exec(`ALTER TABLE regions ADD COLUMN short_name TEXT DEFAULT ''`); } catch (_) {}
+  try { db.exec(`ALTER TABLE regions ADD COLUMN chairman TEXT DEFAULT ''`); } catch (_) {}
+
+  // Set types for existing seed regions
+  const regionTypes = [
+    ['Москва',          'federal',  'МГСВ'],
+    ['Санкт-Петербург', 'federal',  'СВСПБ'],
+    ['Казань',          'republic', 'СВТР'],
+    ['Уфа',             'republic', 'СВБ'],
+    ['Краснодар',       'krai',     'ККСВ'],
+    ['Красноярск',      'krai',     'КрКСВ'],
+    ['Новосибирск',     'oblast',   'НОСВ'],
+    ['Екатеринбург',    'oblast',   'СВСО'],
+    ['Нижний Новгород', 'oblast',   'НОСВ-НН'],
+    ['Самара',          'oblast',   'СВСАМО'],
+    ['Ростов-на-Дону',  'oblast',   'СВРО'],
+    ['Воронеж',         'oblast',   'СВВО'],
+  ];
+  regionTypes.forEach(([city, type, short_name]) => {
+    try {
+      db.prepare("UPDATE regions SET type=?, short_name=? WHERE city=? AND (type IS NULL OR type='oblast' OR short_name='')").run([type, short_name, city]);
+    } catch(_) {}
+  });
+
   // Seed admin
   if (!getOne('SELECT id FROM admins WHERE username = ?', ['admin'])) {
     run('INSERT INTO admins (username, password) VALUES (?, ?)', ['admin', 'admin123']);

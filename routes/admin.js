@@ -201,9 +201,9 @@ router.get('/regions/new', requireAdmin, (req, res) => {
 });
 
 router.post('/regions/new', requireAdmin, (req, res) => {
-  const { city, name, address, phone, email, website, members, sort_order } = req.body;
-  run('INSERT INTO regions (city,name,address,phone,email,website,members,sort_order) VALUES (?,?,?,?,?,?,?,?)',
-      [city, name, address||'', phone||'', email||'', website||'', members||'', parseInt(sort_order)||0]);
+  const { city, name, short_name, chairman, address, phone, email, website, members, type, sort_order } = req.body;
+  run('INSERT INTO regions (city,name,short_name,chairman,address,phone,email,website,members,type,sort_order) VALUES (?,?,?,?,?,?,?,?,?,?,?)',
+      [city, name, short_name||'', chairman||'', address||'', phone||'', email||'', website||'', members||'', type||'oblast', parseInt(sort_order)||0]);
   req.flash('success', 'Регион добавлен');
   res.redirect('/admin/regions');
 });
@@ -215,9 +215,9 @@ router.get('/regions/:id/edit', requireAdmin, (req, res) => {
 });
 
 router.post('/regions/:id/edit', requireAdmin, (req, res) => {
-  const { city, name, address, phone, email, website, members, sort_order } = req.body;
-  run('UPDATE regions SET city=?,name=?,address=?,phone=?,email=?,website=?,members=?,sort_order=? WHERE id=?',
-      [city, name, address||'', phone||'', email||'', website||'', members||'', parseInt(sort_order)||0, req.params.id]);
+  const { city, name, short_name, chairman, address, phone, email, website, members, type, sort_order } = req.body;
+  run('UPDATE regions SET city=?,name=?,short_name=?,chairman=?,address=?,phone=?,email=?,website=?,members=?,type=?,sort_order=? WHERE id=?',
+      [city, name, short_name||'', chairman||'', address||'', phone||'', email||'', website||'', members||'', type||'oblast', parseInt(sort_order)||0, req.params.id]);
   req.flash('success', 'Регион обновлён');
   res.redirect('/admin/regions');
 });

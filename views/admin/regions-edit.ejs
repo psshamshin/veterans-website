@@ -26,15 +26,30 @@
             value="<%= item ? item.city : '' %>" placeholder="Например: Москва">
         </div>
         <div class="col-md-6">
-          <label class="form-label fw-medium">Порядок сортировки</label>
-          <input type="number" name="sort_order" class="form-control" min="0"
-            value="<%= item ? item.sort_order : 0 %>">
+          <label class="form-label fw-medium">Тип организации <span class="text-danger">*</span></label>
+          <select name="type" class="form-select">
+            <option value="federal"  <%= (!item && false) || (item && item.type === 'federal')  ? 'selected' : '' %>>Город федерального значения</option>
+            <option value="republic" <%= (item && item.type === 'republic') ? 'selected' : '' %>>Республиканская организация</option>
+            <option value="krai"     <%= (item && item.type === 'krai')     ? 'selected' : '' %>>Краевая организация</option>
+            <option value="oblast"   <%= (!item || item.type === 'oblast' || !item.type) ? 'selected' : '' %>>Областная организация</option>
+          </select>
         </div>
 
-        <div class="col-12">
+        <div class="col-md-8">
           <label class="form-label fw-medium">Полное название организации <span class="text-danger">*</span></label>
           <input type="text" name="name" class="form-control" required
             value="<%= item ? item.name : '' %>" placeholder="Например: Московский городской совет ветеранов">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label fw-medium">Краткое название</label>
+          <input type="text" name="short_name" class="form-control"
+            value="<%= item ? item.short_name || '' : '' %>" placeholder="Например: МГСВ">
+        </div>
+
+        <div class="col-12">
+          <label class="form-label fw-medium">ФИО председателя</label>
+          <input type="text" name="chairman" class="form-control"
+            value="<%= item ? item.chairman || '' : '' %>" placeholder="Иванов Иван Иванович">
         </div>
 
         <div class="col-12">

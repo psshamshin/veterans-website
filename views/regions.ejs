@@ -1,6 +1,5 @@
 <%- include('partials/header') %>
 
-<!-- Page Banner -->
 <div class="page-banner">
   <div class="container">
     <h1 class="page-banner-title"><i class="fas fa-map-marked-alt me-2"></i>Региональные организации</h1>
@@ -16,64 +15,139 @@
 <main class="py-5">
   <div class="container">
 
-    <!-- Intro -->
-    <div class="row mb-5">
-      <div class="col-lg-8">
-        <p class="lead text-muted">
-          Совет ветеранов России объединяет региональные отделения по всей стране.
-          Найдите организацию в вашем городе и свяжитесь с ней напрямую.
-        </p>
-      </div>
-      <div class="col-lg-4 text-lg-end">
-        <div class="regions-total-badge">
-          <span class="regions-total-number"><%= regions.length %></span>
-          <span class="regions-total-label">региональных отделений</span>
-        </div>
+    <div class="d-flex align-items-center justify-content-between mb-5">
+      <p class="lead text-muted mb-0">
+        Региональные отделения во всех субъектах Российской Федерации
+      </p>
+      <div class="regions-total-badge">
+        <span class="regions-total-number"><%= total %></span>
+        <span class="regions-total-label">организаций</span>
       </div>
     </div>
 
-    <!-- Regions grid -->
-    <div class="row g-4">
-      <% regions.forEach(function(region) { %>
-      <div class="col-md-6 col-xl-4">
-        <div class="region-card">
-          <div class="region-card-header">
-            <div class="region-city-icon">
-              <i class="fas fa-city"></i>
-            </div>
-            <div>
-              <div class="region-city"><%= region.city %></div>
-              <div class="region-members"><i class="fas fa-users me-1"></i><%= region.members %> участников</div>
-            </div>
+    <% grouped.forEach(function(group) { %>
+    <section class="regions-group mb-5">
+      <h2 class="regions-group-title">
+        <span class="regions-group-icon">
+          <% if (group.key === 'federal')  { %><i class="fas fa-landmark"></i>
+          <% } else if (group.key === 'republic') { %><i class="fas fa-flag"></i>
+          <% } else if (group.key === 'krai') { %><i class="fas fa-map"></i>
+          <% } else { %><i class="fas fa-map-marker-alt"></i><% } %>
+        </span>
+        <%= group.label %>
+        <span class="regions-group-count"><%= group.items.length %></span>
+      </h2>
+
+      <div class="regions-table-wrap">
+        <% group.items.forEach(function(r) { %>
+        <div class="rcard">
+          <div class="rcard-name">
+            <div class="rcard-fullname"><%= r.name %><% if (r.short_name) { %> <span class="rcard-shortname">(<%= r.short_name %>)</span><% } %></div>
           </div>
-          <div class="region-card-body">
-            <div class="region-org-name"><%= region.name %></div>
-            <ul class="region-contacts">
-              <li>
-                <i class="fas fa-map-marker-alt"></i>
-                <span><%= region.address %></span>
-              </li>
-              <li>
-                <i class="fas fa-phone"></i>
-                <a href="tel:<%= region.phone.replace(/\s|\(|\)|-/g, '') %>"><%= region.phone %></a>
-              </li>
-              <li>
-                <i class="fas fa-envelope"></i>
-                <a href="mailto:<%= region.email %>"><%= region.email %></a>
-              </li>
-            </ul>
-          </div>
-          <div class="region-card-footer">
-            <a href="<%= region.website %>" target="_blank" rel="noopener" class="btn-region-detail">
-              <i class="fas fa-external-link-alt me-1"></i> Подробнее
-            </a>
+          <div class="rcard-details">
+            <% if (r.address) { %>
+            <div class="rcard-row">
+              <i class="fas fa-map-marker-alt"></i>
+              <span><%= r.address %></span>
+            </div>
+            <% } %>
+            <% if (r.chairman) { %>
+            <div class="rcard-row">
+              <i class="fas fa-user-tie"></i>
+              <span><strong>Председатель:</strong> <%= r.chairman %></span>
+            </div>
+            <% } %>
+            <div class="rcard-contacts">
+              <% if (r.phone) { %>
+              <a href="tel:<%= r.phone.replace(/[\s\(\)\-]/g,'') %>" class="rcard-contact-link">
+                <i class="fas fa-phone"></i><%= r.phone %>
+              </a>
+              <% } %>
+              <% if (r.email) { %>
+              <a href="mailto:<%= r.email %>" class="rcard-contact-link">
+                <i class="fas fa-envelope"></i><%= r.email %>
+              </a>
+              <% } %>
+              <% if (r.website) { %>
+              <a href="<%= r.website %>" target="_blank" rel="noopener" class="rcard-contact-link rcard-website">
+                <i class="fas fa-globe"></i><%= r.website.replace(/^https?:\/\//, '') %>
+              </a>
+              <% } %>
+            </div>
           </div>
         </div>
+        <% }) %>
       </div>
-      <% }) %>
+    </section>
+    <% }) %>
+
+    <% if (!grouped || grouped.length === 0) { %>
+    <div class="empty-state">
+      <i class="fas fa-map-marked-alt fa-3x text-muted mb-3"></i>
+      <p>Региональных организаций пока нет</p>
     </div>
+    <% } %>
 
   </div>
 </main>
 
 <%- include('partials/footer') %>
+
+<style>
+.regions-group-title {
+  font-size: 1.1rem; font-weight: 700; color: var(--primary);
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 16px; padding-bottom: 10px;
+  border-bottom: 2px solid rgba(27,58,107,0.12);
+}
+.regions-group-icon {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: #fff; display: flex; align-items: center; justify-content: center;
+  font-size: 0.85rem; flex-shrink: 0;
+}
+.regions-group-count {
+  margin-left: auto;
+  font-size: 0.8rem; font-weight: 600;
+  background: rgba(27,58,107,0.08); color: var(--primary);
+  padding: 2px 10px; border-radius: 20px;
+}
+
+.regions-table-wrap { display: flex; flex-direction: column; gap: 1px; }
+
+.rcard {
+  background: #fff;
+  border: 1px solid rgba(27,58,107,0.08);
+  border-radius: var(--radius);
+  padding: 18px 22px;
+  display: flex; gap: 24px; align-items: flex-start;
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+.rcard:hover { box-shadow: var(--shadow); transform: translateX(3px); }
+
+.rcard-name { flex: 0 0 340px; max-width: 340px; }
+.rcard-fullname { font-size: 0.92rem; font-weight: 700; color: var(--primary); line-height: 1.4; }
+.rcard-shortname { font-weight: 400; color: var(--text-muted); font-size: 0.85rem; }
+
+.rcard-details { flex: 1; display: flex; flex-direction: column; gap: 7px; }
+.rcard-row {
+  display: flex; align-items: flex-start; gap: 8px;
+  font-size: 0.875rem; color: var(--text);
+}
+.rcard-row i { color: var(--accent); flex-shrink: 0; margin-top: 3px; width: 14px; }
+
+.rcard-contacts { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 4px; }
+.rcard-contact-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.84rem; color: var(--primary); text-decoration: none;
+  transition: color var(--transition);
+}
+.rcard-contact-link:hover { color: var(--accent); }
+.rcard-contact-link i { font-size: 0.78rem; color: var(--accent); }
+.rcard-website { color: var(--primary-light); }
+
+@media (max-width: 768px) {
+  .rcard { flex-direction: column; gap: 12px; }
+  .rcard-name { flex: none; max-width: 100%; }
+}
+</style>
