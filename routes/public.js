@@ -75,11 +75,12 @@ router.get('/events', (req, res) => {
 router.get('/documents', (req, res) => {
   const documents = getAll('SELECT * FROM documents ORDER BY uploaded_at DESC');
   const allCats = [...new Set(documents.map(d => d.category))];
-  const priority = ['Устав', 'Положения', 'Положение'];
+  const priority = ['устав', 'положени'];
+  const isPriority = c => priority.some(p => c.toLowerCase().includes(p));
   const categories = [
-    ...priority.filter(p => allCats.some(c => c.toLowerCase().includes(p.toLowerCase()))),
-    ...allCats.filter(c => !priority.some(p => c.toLowerCase().includes(p.toLowerCase()))).sort(),
-  ].filter((c, i, arr) => arr.indexOf(c) === i);
+    ...allCats.filter(c => isPriority(c)).sort(),
+    ...allCats.filter(c => !isPriority(c)).sort(),
+  ];
   res.render('documents', { title: 'Документы', documents, categories, activePage: 'documents' });
 });
 
