@@ -22,13 +22,13 @@
   </div>
   <% } else { %>
 
-  <% // Group by category
-  const grouped = {};
+  <% const grouped = {};
   documents.forEach(d => {
     if (!grouped[d.category]) grouped[d.category] = [];
     grouped[d.category].push(d);
   });
-  Object.keys(grouped).forEach(cat => {
+  categories.forEach(cat => {
+    if (!grouped[cat]) return;
   %>
   <div class="mb-4">
     <h4 class="docs-category-title"><i class="fas fa-folder-open text-danger me-2"></i><%= cat %></h4>
