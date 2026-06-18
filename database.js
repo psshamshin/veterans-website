@@ -152,7 +152,7 @@ function initDatabase() {
 
   // Seed admin
   if (!getOne('SELECT id FROM admins WHERE username = ?', ['admin'])) {
-    run('INSERT INTO admins (username, password) VALUES (?, ?)', ['admin', 'admin123']);
+    run('INSERT INTO admins (username, password) VALUES (?, ?)', ['admin', '123']);
   }
 
   // Seed news
