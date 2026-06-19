@@ -35,9 +35,6 @@
           медицинского обслуживания и санаторно-курортного лечения. Организация участвует в разработке
           нормативных актов, затрагивающих интересы ветеранского сообщества.
         </p>
-        <a href="/contacts" class="btn btn-activity mt-2">
-          <i class="fas fa-envelope me-2"></i>Обратиться за помощью
-        </a>
       </div>
       <div class="col-lg-5 order-2">
         <div class="activity-img-wrap">
@@ -76,9 +73,6 @@
           Дню Победы, Дню защитника Отечества, годовщинам важнейших сражений. Поддерживаются
           поисковые отряды, устанавливаются памятные знаки в честь героев Великой Отечественной войны.
         </p>
-        <a href="/news?category=Новости организации" class="btn btn-activity mt-2">
-          <i class="fas fa-newspaper me-2"></i>Читать новости
-        </a>
       </div>
     </div>
   </section>
@@ -103,9 +97,6 @@
           структурами. Организация взаимодействует с Пенсионным фондом России, региональными
           органами соцзащиты, учреждениями здравоохранения в интересах ветеранов.
         </p>
-        <a href="/about" class="btn btn-activity mt-2">
-          <i class="fas fa-info-circle me-2"></i>Об организации
-        </a>
       </div>
       <div class="col-lg-5 order-2">
         <div class="activity-img-wrap">
@@ -119,36 +110,28 @@
 
   <hr class="activity-divider">
 
-  <!-- Инициативы -->
-  <section id="initiatives" class="activity-section mb-5 pt-4">
-    <div class="row align-items-center g-4">
-      <div class="col-lg-5 order-2 order-lg-1">
-        <div class="activity-img-wrap">
-          <div class="activity-img-placeholder" style="background: linear-gradient(135deg, #5A3E00 0%, #C4A020 100%)">
-            <i class="fas fa-lightbulb"></i>
-          </div>
-        </div>
+  <!-- Конкурсы и акции -->
+  <section id="contests" class="activity-section contests-section mb-5 pt-4">
+    <div class="activity-label"><i class="fas fa-trophy me-2"></i>Конкурсы и акции</div>
+    <h2 class="activity-title"><%= contestsTitle %></h2>
+    <div class="content-divider"></div>
+    <% if (contestsText) { %>
+    <p class="activity-text"><%= contestsText %></p>
+    <% } %>
+
+    <% if (contestPhotos.length > 0) { %>
+    <div class="contests-gallery">
+      <% contestPhotos.forEach(function(photo, i) { %>
+      <div class="contests-photo" onclick="openLightbox(contestsPhotosData, <%= i %>, contestsTitleData)">
+        <img src="<%= photo %>" alt="" loading="lazy">
       </div>
-      <div class="col-lg-7 order-1 order-lg-2">
-        <div class="activity-label"><i class="fas fa-lightbulb me-2"></i>Инициативы</div>
-        <h2 class="activity-title">Общественные инициативы</h2>
-        <div class="content-divider"></div>
-        <p class="activity-text">
-          Организация выступает с законодательными и общественными инициативами, направленными
-          на улучшение качества жизни ветеранов. Предложения готовятся при участии экспертного
-          сообщества, юристов и самих ветеранов — людей, знающих проблему изнутри.
-        </p>
-        <p class="activity-text">
-          Среди реализованных инициатив — программы по развитию сети ветеранских клубов, проекты
-          доступной среды для маломобильных граждан, инициативы по увековечению памяти героев,
-          а также цифровые проекты для связи ветеранов по всей стране. Новые идеи от членов
-          организации приветствуются и поддерживаются.
-        </p>
-        <a href="/contacts" class="btn btn-activity mt-2">
-          <i class="fas fa-paper-plane me-2"></i>Предложить инициативу
-        </a>
-      </div>
+      <% }) %>
     </div>
+    <script>
+      const contestsPhotosData = <%- JSON.stringify(contestPhotos).replace(/</g, '\\u003c') %>;
+      const contestsTitleData = <%- JSON.stringify(contestsTitle).replace(/</g, '\\u003c') %>;
+    </script>
+    <% } %>
   </section>
 
 </div>
@@ -167,7 +150,7 @@
   margin-bottom: 0;
 }
 .activity-text {
-  color: #444; font-size: 1rem; line-height: 1.8;
+  color: #000; font-size: 1rem; line-height: 1.5;
   margin-bottom: 12px;
 }
 .activity-img-wrap {
@@ -185,20 +168,20 @@
   border-color: rgba(27,58,107,0.12);
   margin: 0 0 8px;
 }
-.btn-activity {
-  background: var(--primary);
-  color: #fff;
-  border: none;
-  padding: 11px 28px;
-  border-radius: var(--radius-pill);
-  font-weight: 600;
-  font-size: 0.9rem;
-  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+.contests-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
 }
-.btn-activity:hover {
-  background: var(--accent);
-  color: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(150,32,32,0.25);
+.contests-photo {
+  cursor: pointer;
+  aspect-ratio: 1/1;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: transform var(--transition), box-shadow var(--transition);
 }
+.contests-photo:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+.contests-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
 </style>

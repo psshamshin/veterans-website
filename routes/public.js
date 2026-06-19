@@ -2,6 +2,17 @@ const express = require('express');
 const router = express.Router();
 const { getOne, getAll, run } = require('../database');
 const centralCouncil = require('../data/centralCouncil');
+const regionGeoLabels = require('../data/regionGeoLabels');
+
+const escapeHtml = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+function highlightGeo(name, geo) {
+  const idx = geo ? name.indexOf(geo) : -1;
+  if (idx === -1) return escapeHtml(name);
+  return escapeHtml(name.slice(0, idx)) +
+    '<strong>' + escapeHtml(name.slice(idx, idx + geo.length)) + '</strong>' +
+    escapeHtml(name.slice(idx + geo.length));
+}
 
 // Home page
 router.get('/', (req, res) => {
@@ -139,11 +150,16 @@ router.get('/gallery', (req, res) => {
 
 // Activity
 router.get('/activity', (req, res) => {
-  res.render('activity', { title: 'Деятельность', activePage: 'activity' });
+  const getSetting = key => { const r = getOne('SELECT value FROM settings WHERE key = ?', [key]); return r ? r.value : null; };
+  const contestsTitle = getSetting('contests_title') || 'Конкурсы и акции';
+  const contestsText = getSetting('contests_text') || '';
+  const contestPhotos = getAll('SELECT image FROM contest_photos ORDER BY sort_order ASC, id ASC').map(p => p.image);
+  res.render('activity', { title: 'Деятельность', activePage: 'activity', contestsTitle, contestsText, contestPhotos });
 });
 
 router.get('/regions', (req, res) => {
   const all = getAll('SELECT * FROM regions ORDER BY city ASC');
+  all.forEach(r => { r.nameHtml = highlightGeo(r.name, regionGeoLabels[r.city]); });
   const groupDefs = [
     { key: 'federal',  label: 'Города федерального значения' },
     { key: 'republic', label: 'Республиканские организации' },

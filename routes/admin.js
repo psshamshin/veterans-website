@@ -352,6 +352,56 @@ function setSetting(key, value) {
   }
 }
 
+// ─── ДЕЯТЕЛЬНОСТЬ: КОНКУРСЫ И АКЦИИ ─────────────────────────────────────────────
+
+const MAX_CONTEST_PHOTOS = 10;
+
+router.get('/contests', requireAdmin, (req, res) => {
+  const photos = getAll('SELECT * FROM contest_photos ORDER BY sort_order ASC, id ASC');
+  res.render('admin/contests', {
+    title: 'Конкурсы и акции',
+    contestsTitle: getSetting('contests_title') || 'Конкурсы и акции',
+    contestsText: getSetting('contests_text') || '',
+    photos,
+    maxPhotos: MAX_CONTEST_PHOTOS,
+  });
+});
+
+router.post('/contests/text', requireAdmin, (req, res) => {
+  const { title, text } = req.body;
+  setSetting('contests_title', title || 'Конкурсы и акции');
+  setSetting('contests_text', text || '');
+  req.flash('success', 'Текст обновлён');
+  res.redirect('/admin/contests');
+});
+
+router.post('/contests/photos/new', requireAdmin, upload.single('image'), (req, res) => {
+  const count = getOne('SELECT COUNT(*) as cnt FROM contest_photos').cnt;
+  if (count >= MAX_CONTEST_PHOTOS) {
+    req.flash('error', `Можно загрузить не более ${MAX_CONTEST_PHOTOS} фотографий`);
+    return res.redirect('/admin/contests');
+  }
+  if (!req.file) {
+    req.flash('error', 'Выберите изображение');
+    return res.redirect('/admin/contests');
+  }
+  const maxOrder = getOne('SELECT MAX(sort_order) as m FROM contest_photos').m || 0;
+  run('INSERT INTO contest_photos (image, sort_order) VALUES (?, ?)', ['/uploads/' + req.file.filename, maxOrder + 1]);
+  req.flash('success', 'Фото добавлено');
+  res.redirect('/admin/contests');
+});
+
+router.post('/contests/photos/:id/delete', requireAdmin, (req, res) => {
+  const item = getOne('SELECT * FROM contest_photos WHERE id = ?', [req.params.id]);
+  if (item && item.image) {
+    const filePath = path.join(__dirname, '..', item.image);
+    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+  }
+  run('DELETE FROM contest_photos WHERE id = ?', [req.params.id]);
+  req.flash('success', 'Фото удалено');
+  res.redirect('/admin/contests');
+});
+
 // ─── GAZETTE "ВЕТЕРАН" (выпуски: обложка + PDF) ────────────────────────────────
 
 const gazetteUpload = upload.fields([{ name: 'cover', maxCount: 1 }, { name: 'file', maxCount: 1 }]);
