@@ -87,12 +87,9 @@ router.get('/documents', (req, res) => {
   res.render('documents', { title: 'Документы', documents, categories, activePage: 'documents' });
 });
 
-// Gazette "Ветеран" — list of issues, each with its own photos and download file
+// Gazette "Ветеран" — each issue is one cover image + one downloadable PDF
 router.get('/gazette', (req, res) => {
   const issues = getAll('SELECT * FROM gazette_issues ORDER BY created_at DESC, id DESC');
-  issues.forEach(issue => {
-    issue.photos = getAll('SELECT image FROM gazette_photos WHERE issue_id = ? ORDER BY sort_order ASC, id ASC', [issue.id]).map(p => p.image);
-  });
   res.render('gazette', { title: 'Газета «Ветеран»', activePage: 'gazette', issues });
 });
 

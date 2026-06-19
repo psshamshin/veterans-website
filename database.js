@@ -122,14 +122,8 @@ function initDatabase() {
     CREATE TABLE IF NOT EXISTS gazette_issues (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       title TEXT NOT NULL,
+      cover TEXT,
       file TEXT,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    );
-    CREATE TABLE IF NOT EXISTS gazette_photos (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      issue_id INTEGER,
-      image TEXT NOT NULL,
-      sort_order INTEGER DEFAULT 0,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
     CREATE TABLE IF NOT EXISTS news_photos (
@@ -140,20 +134,8 @@ function initDatabase() {
     );
   `);
 
-  // Migrate gazette_photos: add issue_id if missing (old flat-pool schema)
-  try { db.exec(`ALTER TABLE gazette_photos ADD COLUMN issue_id INTEGER`); } catch (_) {}
-
-  // One-time migration: fold any pre-existing flat gazette photos/file into a single default issue
-  if (getOne('SELECT COUNT(*) as cnt FROM gazette_issues').cnt === 0) {
-    const orphanPhotos = getAll('SELECT id FROM gazette_photos WHERE issue_id IS NULL');
-    const oldFile = getOne("SELECT value FROM settings WHERE key = 'gazette_file'");
-    if (orphanPhotos.length > 0 || oldFile) {
-      run('INSERT INTO gazette_issues (title, file) VALUES (?, ?)', ['Выпуск 1', oldFile ? oldFile.value : null]);
-      const issueId = getOne("SELECT id FROM gazette_issues WHERE title = 'Выпуск 1'").id;
-      run('UPDATE gazette_photos SET issue_id = ? WHERE issue_id IS NULL', [issueId]);
-      if (oldFile) run("DELETE FROM settings WHERE key = 'gazette_file'");
-    }
-  }
+  // Migrate gazette_issues: add cover column if missing (each issue = one cover + one PDF)
+  try { db.exec(`ALTER TABLE gazette_issues ADD COLUMN cover TEXT`); } catch (_) {}
 
   // Migrate leaders: add role column if missing
   try { db.exec(`ALTER TABLE leaders ADD COLUMN role TEXT DEFAULT 'bureau'`); } catch (_) {}

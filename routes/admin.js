@@ -352,105 +352,62 @@ function setSetting(key, value) {
   }
 }
 
-// ─── GAZETTE "ВЕТЕРАН" (выпуски) ───────────────────────────────────────────────
+// ─── GAZETTE "ВЕТЕРАН" (выпуски: обложка + PDF) ────────────────────────────────
+
+const gazetteUpload = upload.fields([{ name: 'cover', maxCount: 1 }, { name: 'file', maxCount: 1 }]);
 
 router.get('/gazette', requireAdmin, (req, res) => {
   const issues = getAll('SELECT * FROM gazette_issues ORDER BY created_at DESC, id DESC');
-  issues.forEach(issue => {
-    issue.photoCount = getOne('SELECT COUNT(*) as cnt FROM gazette_photos WHERE issue_id = ?', [issue.id]).cnt;
-  });
   res.render('admin/gazette-list', { title: 'Газета «Ветеран»', issues });
 });
 
-router.post('/gazette/issues/new', requireAdmin, (req, res) => {
+router.post('/gazette/issues/new', requireAdmin, gazetteUpload, (req, res) => {
   const { title } = req.body;
-  if (!title) {
-    req.flash('error', 'Укажите название выпуска');
+  const cover = req.files.cover ? '/uploads/' + req.files.cover[0].filename : null;
+  const file = req.files.file ? '/uploads/' + req.files.file[0].filename : null;
+  if (!title || !cover || !file) {
+    req.flash('error', 'Укажите название, обложку и PDF-файл выпуска');
     return res.redirect('/admin/gazette');
   }
-  run('INSERT INTO gazette_issues (title) VALUES (?)', [title]);
-  req.flash('success', 'Выпуск создан');
-  res.redirect('/admin/gazette');
-});
-
-router.post('/gazette/issues/:id/delete', requireAdmin, (req, res) => {
-  const issue = getOne('SELECT * FROM gazette_issues WHERE id = ?', [req.params.id]);
-  if (issue && issue.file) {
-    const filePath = path.join(__dirname, '..', issue.file);
-    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
-  }
-  const photos = getAll('SELECT * FROM gazette_photos WHERE issue_id = ?', [req.params.id]);
-  photos.forEach(p => {
-    const filePath = path.join(__dirname, '..', p.image);
-    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
-  });
-  run('DELETE FROM gazette_photos WHERE issue_id = ?', [req.params.id]);
-  run('DELETE FROM gazette_issues WHERE id = ?', [req.params.id]);
-  req.flash('success', 'Выпуск удалён');
+  run('INSERT INTO gazette_issues (title, cover, file) VALUES (?, ?, ?)', [title, cover, file]);
+  req.flash('success', 'Выпуск добавлен');
   res.redirect('/admin/gazette');
 });
 
 router.get('/gazette/issues/:id/edit', requireAdmin, (req, res) => {
   const issue = getOne('SELECT * FROM gazette_issues WHERE id = ?', [req.params.id]);
   if (!issue) return res.redirect('/admin/gazette');
-  const photos = getAll('SELECT * FROM gazette_photos WHERE issue_id = ? ORDER BY sort_order ASC, id ASC', [req.params.id]);
-  res.render('admin/gazette-edit', { title: 'Выпуск: ' + issue.title, issue, photos });
+  res.render('admin/gazette-edit', { title: 'Выпуск: ' + issue.title, issue });
 });
 
-router.post('/gazette/issues/:id/edit', requireAdmin, (req, res) => {
+router.post('/gazette/issues/:id/edit', requireAdmin, gazetteUpload, (req, res) => {
   const { title } = req.body;
-  run('UPDATE gazette_issues SET title = ? WHERE id = ?', [title, req.params.id]);
-  req.flash('success', 'Название обновлено');
-  res.redirect('/admin/gazette/issues/' + req.params.id + '/edit');
+  const existing = getOne('SELECT * FROM gazette_issues WHERE id = ?', [req.params.id]);
+  let cover = existing.cover;
+  if (req.files.cover) {
+    if (cover) { const p = path.join(__dirname, '..', cover); if (fs.existsSync(p)) fs.unlinkSync(p); }
+    cover = '/uploads/' + req.files.cover[0].filename;
+  }
+  let file = existing.file;
+  if (req.files.file) {
+    if (file) { const p = path.join(__dirname, '..', file); if (fs.existsSync(p)) fs.unlinkSync(p); }
+    file = '/uploads/' + req.files.file[0].filename;
+  }
+  run('UPDATE gazette_issues SET title=?, cover=?, file=? WHERE id=?', [title, cover, file, req.params.id]);
+  req.flash('success', 'Выпуск обновлён');
+  res.redirect('/admin/gazette');
 });
 
-router.post('/gazette/issues/:id/photos/new', requireAdmin, upload.single('image'), (req, res) => {
-  if (!req.file) {
-    req.flash('error', 'Выберите изображение');
-    return res.redirect('/admin/gazette/issues/' + req.params.id + '/edit');
-  }
-  const maxOrder = getOne('SELECT MAX(sort_order) as m FROM gazette_photos WHERE issue_id = ?', [req.params.id]).m || 0;
-  run('INSERT INTO gazette_photos (issue_id, image, sort_order) VALUES (?, ?, ?)',
-      [req.params.id, '/uploads/' + req.file.filename, maxOrder + 1]);
-  req.flash('success', 'Страница добавлена');
-  res.redirect('/admin/gazette/issues/' + req.params.id + '/edit');
-});
-
-router.post('/gazette/issues/:id/photos/:photoId/delete', requireAdmin, (req, res) => {
-  const photo = getOne('SELECT * FROM gazette_photos WHERE id = ?', [req.params.photoId]);
-  if (photo && photo.image) {
-    const filePath = path.join(__dirname, '..', photo.image);
-    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
-  }
-  run('DELETE FROM gazette_photos WHERE id = ?', [req.params.photoId]);
-  req.flash('success', 'Страница удалена');
-  res.redirect('/admin/gazette/issues/' + req.params.id + '/edit');
-});
-
-router.post('/gazette/issues/:id/file', requireAdmin, upload.single('file'), (req, res) => {
-  if (!req.file) {
-    req.flash('error', 'Выберите файл');
-    return res.redirect('/admin/gazette/issues/' + req.params.id + '/edit');
-  }
+router.post('/gazette/issues/:id/delete', requireAdmin, (req, res) => {
   const issue = getOne('SELECT * FROM gazette_issues WHERE id = ?', [req.params.id]);
-  if (issue && issue.file) {
-    const oldPath = path.join(__dirname, '..', issue.file);
-    if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
-  }
-  run('UPDATE gazette_issues SET file = ? WHERE id = ?', ['/uploads/' + req.file.filename, req.params.id]);
-  req.flash('success', 'Файл для скачивания обновлён');
-  res.redirect('/admin/gazette/issues/' + req.params.id + '/edit');
-});
-
-router.post('/gazette/issues/:id/file/delete', requireAdmin, (req, res) => {
-  const issue = getOne('SELECT * FROM gazette_issues WHERE id = ?', [req.params.id]);
-  if (issue && issue.file) {
-    const filePath = path.join(__dirname, '..', issue.file);
+  [issue && issue.cover, issue && issue.file].forEach(f => {
+    if (!f) return;
+    const filePath = path.join(__dirname, '..', f);
     if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
-  }
-  run('UPDATE gazette_issues SET file = NULL WHERE id = ?', [req.params.id]);
-  req.flash('success', 'Файл удалён');
-  res.redirect('/admin/gazette/issues/' + req.params.id + '/edit');
+  });
+  run('DELETE FROM gazette_issues WHERE id = ?', [req.params.id]);
+  req.flash('success', 'Выпуск удалён');
+  res.redirect('/admin/gazette');
 });
 
 router.get('/settings', requireAdmin, (req, res) => {
