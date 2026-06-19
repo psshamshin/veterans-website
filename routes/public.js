@@ -149,6 +149,7 @@ router.get('/regions', (req, res) => {
     { key: 'republic', label: 'Республиканские организации' },
     { key: 'krai',     label: 'Краевые организации' },
     { key: 'oblast',   label: 'Областные организации' },
+    { key: 'okrug',    label: 'Автономные округа и область' },
   ];
   const grouped = groupDefs
     .map(g => ({ ...g, items: all.filter(r => r.type === g.key) }))
