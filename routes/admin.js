@@ -84,7 +84,8 @@ router.post('/news/new', requireAdmin, upload.single('image'), (req, res) => {
 router.get('/news/:id/edit', requireAdmin, (req, res) => {
   const item = getOne('SELECT * FROM news WHERE id = ?', [req.params.id]);
   if (!item) return res.redirect('/admin/news');
-  res.render('admin/news-edit', { title: 'Редактировать новость', item });
+  const newsPhotos = getAll('SELECT * FROM news_photos WHERE news_id = ? ORDER BY sort_order ASC, id ASC', [item.id]);
+  res.render('admin/news-edit', { title: 'Редактировать новость', item, newsPhotos });
 });
 
 router.post('/news/:id/edit', requireAdmin, upload.single('image'), (req, res) => {
@@ -103,9 +104,40 @@ router.post('/news/:id/delete', requireAdmin, (req, res) => {
     const filePath = path.join(__dirname, '..', item.image);
     if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
   }
+  const extraPhotos = getAll('SELECT * FROM news_photos WHERE news_id = ?', [req.params.id]);
+  extraPhotos.forEach(p => {
+    const filePath = path.join(__dirname, '..', p.image);
+    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+  });
+  run('DELETE FROM news_photos WHERE news_id = ?', [req.params.id]);
   run('DELETE FROM news WHERE id = ?', [req.params.id]);
   req.flash('success', 'Новость удалена');
   res.redirect('/admin/news');
+});
+
+// ─── NEWS GALLERY PHOTOS ──────────────────────────────────────────────────────
+
+router.post('/news/:id/photos/new', requireAdmin, upload.single('photo'), (req, res) => {
+  if (!req.file) {
+    req.flash('error', 'Выберите изображение');
+    return res.redirect('/admin/news/' + req.params.id + '/edit');
+  }
+  const maxOrder = getOne('SELECT MAX(sort_order) as m FROM news_photos WHERE news_id = ?', [req.params.id]).m || 0;
+  run('INSERT INTO news_photos (news_id, image, sort_order) VALUES (?, ?, ?)',
+      [req.params.id, '/uploads/' + req.file.filename, maxOrder + 1]);
+  req.flash('success', 'Фото добавлено');
+  res.redirect('/admin/news/' + req.params.id + '/edit');
+});
+
+router.post('/news/:id/photos/:photoId/delete', requireAdmin, (req, res) => {
+  const photo = getOne('SELECT * FROM news_photos WHERE id = ?', [req.params.photoId]);
+  if (photo && photo.image) {
+    const filePath = path.join(__dirname, '..', photo.image);
+    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+  }
+  run('DELETE FROM news_photos WHERE id = ?', [req.params.photoId]);
+  req.flash('success', 'Фото удалено');
+  res.redirect('/admin/news/' + req.params.id + '/edit');
 });
 
 // ─── EVENTS ───────────────────────────────────────────────────────────────────

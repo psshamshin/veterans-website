@@ -16,27 +16,39 @@
 <main class="py-5">
   <div class="container">
 
-    <% if (photos.length > 0) { %>
+    <% if (folders.length > 0) { %>
 
-    <p class="text-muted mb-4">Все фотоматериалы из новостей организации. Нажмите на фото, чтобы перейти к новости.</p>
+    <p class="text-muted mb-4">Фотографии из новостей организации, сгруппированные по событиям. Нажмите на папку, чтобы посмотреть все фото.</p>
 
     <div class="gallery-grid">
-      <% photos.forEach(function(photo) { %>
-      <a href="/news/<%= photo.id %>" class="gallery-item" title="<%= photo.title %>">
-        <img src="<%= photo.image %>" alt="<%= photo.title %>" loading="lazy">
-        <div class="gallery-item-overlay">
-          <div class="gallery-item-info">
-            <span class="gallery-item-category"><%= photo.category %></span>
-            <p class="gallery-item-title"><%= photo.title %></p>
-            <span class="gallery-item-date">
-              <i class="fas fa-calendar me-1"></i>
-              <%= new Date(photo.published_at).toLocaleDateString('ru-RU', {day:'numeric', month:'long', year:'numeric'}) %>
-            </span>
+      <% folders.forEach(function(folder, i) { %>
+      <div class="gallery-folder" onclick="openLightbox(galleryFolders[<%= i %>].photos, 0, galleryFolders[<%= i %>].title)">
+        <% if (folder.count > 1) { %>
+        <div class="gallery-folder-stack"></div>
+        <% } %>
+        <div class="gallery-item">
+          <img src="<%= folder.cover %>" alt="<%= folder.title %>" loading="lazy">
+          <% if (folder.count > 1) { %>
+          <div class="gallery-folder-count"><i class="fas fa-images"></i> <%= folder.count %></div>
+          <% } %>
+          <div class="gallery-item-overlay">
+            <div class="gallery-item-info">
+              <span class="gallery-item-category"><%= folder.category %></span>
+              <p class="gallery-item-title"><%= folder.title %></p>
+              <span class="gallery-item-date">
+                <i class="fas fa-calendar me-1"></i>
+                <%= new Date(folder.published_at).toLocaleDateString('ru-RU', {day:'numeric', month:'long', year:'numeric'}) %>
+              </span>
+            </div>
           </div>
         </div>
-      </a>
+      </div>
       <% }) %>
     </div>
+
+    <script>
+      const galleryFolders = <%- JSON.stringify(folders.map(f => ({ title: f.title, photos: f.photos }))).replace(/</g, '\\u003c') %>;
+    </script>
 
     <% } else { %>
     <div class="empty-state">

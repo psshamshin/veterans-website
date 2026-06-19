@@ -61,8 +61,10 @@ router.get('/news/:id', (req, res) => {
     'SELECT * FROM news WHERE is_published = 1 AND id != ? AND category = ? ORDER BY published_at DESC LIMIT 3',
     [item.id, item.category]
   );
+  const extraPhotos = getAll('SELECT image FROM news_photos WHERE news_id = ? ORDER BY sort_order ASC, id ASC', [item.id]);
+  const allPhotos = [...(item.image ? [item.image] : []), ...extraPhotos.map(p => p.image)];
 
-  res.render('news-detail', { title: item.title, item, related, activePage: 'news' });
+  res.render('news-detail', { title: item.title, item, related, allPhotos, activePage: 'news' });
 });
 
 // Events
@@ -116,14 +118,25 @@ router.get('/media', (req, res) => {
   res.render('media', { title: 'СМИ', activePage: 'media' });
 });
 
-// Gallery
+// Gallery — one "folder" per news item with at least one photo
 router.get('/gallery', (req, res) => {
-  const photos = getAll(`
+  const newsWithPhotos = getAll(`
     SELECT id, title, image, category, published_at FROM news
-    WHERE is_published = 1 AND image IS NOT NULL AND image != ''
+    WHERE is_published = 1 AND (
+      (image IS NOT NULL AND image != '') OR
+      id IN (SELECT DISTINCT news_id FROM news_photos)
+    )
     ORDER BY published_at DESC
   `);
-  res.render('gallery', { title: 'Галерея', photos, activePage: 'gallery' });
+  const folders = newsWithPhotos.map(n => {
+    const extra = getAll('SELECT image FROM news_photos WHERE news_id = ? ORDER BY sort_order ASC, id ASC', [n.id]);
+    const photos = [...(n.image ? [n.image] : []), ...extra.map(p => p.image)];
+    return {
+      id: n.id, title: n.title, category: n.category, published_at: n.published_at,
+      cover: photos[0], count: photos.length, photos,
+    };
+  });
+  res.render('gallery', { title: 'Галерея', folders, activePage: 'gallery' });
 });
 
 // Activity

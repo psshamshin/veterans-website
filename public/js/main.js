@@ -25,3 +25,48 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 });
+
+// Shared photo lightbox (used by Gallery folders and "all photos" links on news pages)
+let lightboxPhotos = [];
+let lightboxIndex = 0;
+
+function openLightbox(photos, startIndex, title) {
+  lightboxPhotos = photos;
+  lightboxIndex = startIndex || 0;
+  document.getElementById('lightboxTitle').textContent = title || '';
+  updateLightboxImage();
+  document.getElementById('lightboxOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  document.getElementById('lightboxOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function lightboxPrev() {
+  lightboxIndex = (lightboxIndex - 1 + lightboxPhotos.length) % lightboxPhotos.length;
+  updateLightboxImage();
+}
+
+function lightboxNext() {
+  lightboxIndex = (lightboxIndex + 1) % lightboxPhotos.length;
+  updateLightboxImage();
+}
+
+function updateLightboxImage() {
+  document.getElementById('lightboxImg').src = lightboxPhotos[lightboxIndex];
+  document.getElementById('lightboxCounter').textContent =
+    lightboxPhotos.length > 1 ? (lightboxIndex + 1) + ' / ' + lightboxPhotos.length : '';
+  document.querySelectorAll('.lightbox-nav').forEach(function (btn) {
+    btn.style.display = lightboxPhotos.length > 1 ? '' : 'none';
+  });
+}
+
+document.addEventListener('keydown', function (e) {
+  const overlay = document.getElementById('lightboxOverlay');
+  if (!overlay || !overlay.classList.contains('active')) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowLeft') lightboxPrev();
+  if (e.key === 'ArrowRight') lightboxNext();
+});

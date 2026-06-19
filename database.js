@@ -125,6 +125,12 @@ function initDatabase() {
       sort_order INTEGER DEFAULT 0,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
+    CREATE TABLE IF NOT EXISTS news_photos (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      news_id INTEGER NOT NULL,
+      image TEXT NOT NULL,
+      sort_order INTEGER DEFAULT 0
+    );
   `);
 
   // Migrate leaders: add role column if missing

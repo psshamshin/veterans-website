@@ -99,4 +99,47 @@
   </div>
 </form>
 
+<% if (item) { %>
+<div class="admin-card mt-4">
+  <div class="admin-card-header"><h5 class="mb-0">Дополнительные фото (для галереи)</h5></div>
+  <div class="admin-card-body">
+    <p class="text-muted small">
+      Эти фото показываются по ссылке «Посмотреть все фотографии» на странице новости
+      и в виде «папки» в общей Галерее. На самой странице новости отображается только
+      главное изображение выше.
+    </p>
+
+    <% if (locals.newsPhotos && newsPhotos.length > 0) { %>
+    <div class="row g-3 mb-3">
+      <% newsPhotos.forEach(p => { %>
+      <div class="col-md-3 col-sm-4 col-6">
+        <div class="position-relative">
+          <img src="<%= p.image %>" alt="" class="img-fluid rounded" style="width:100%;height:120px;object-fit:cover">
+          <form action="/admin/news/<%= item.id %>/photos/<%= p.id %>/delete" method="POST"
+                onsubmit="return confirm('Удалить фото?')"
+                class="position-absolute top-0 end-0 m-1">
+            <button type="submit" class="btn btn-xs btn-outline-danger bg-white">
+              <i class="fas fa-trash"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+    <% } %>
+
+    <form action="/admin/news/<%= item.id %>/photos/new" method="POST" enctype="multipart/form-data" class="row g-3 align-items-end">
+      <div class="col-md-8">
+        <input type="file" name="photo" class="form-control" accept="image/*" required>
+      </div>
+      <div class="col-md-4">
+        <button type="submit" class="btn btn-danger w-100">
+          <i class="fas fa-upload me-1"></i>Добавить фото
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<% } %>
+
 <%- include('partials/admin-layout-bottom') %>

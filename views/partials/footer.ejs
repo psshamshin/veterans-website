@@ -96,6 +96,26 @@
   </div>
 </footer>
 
+<!-- Photo lightbox (shared by Gallery and news pages) -->
+<div class="lightbox-overlay" id="lightboxOverlay" onclick="if(event.target===this) closeLightbox()">
+  <div class="lightbox-content">
+    <button type="button" class="lightbox-close" onclick="closeLightbox()" aria-label="Закрыть">
+      <i class="fas fa-times"></i>
+    </button>
+    <button type="button" class="lightbox-nav lightbox-prev" onclick="lightboxPrev()" aria-label="Предыдущее фото">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    <img id="lightboxImg" src="" alt="">
+    <button type="button" class="lightbox-nav lightbox-next" onclick="lightboxNext()" aria-label="Следующее фото">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+    <div class="lightbox-caption">
+      <span id="lightboxTitle"></span>
+      <span id="lightboxCounter" class="lightbox-counter"></span>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/js/main.js"></script>
 </body>
