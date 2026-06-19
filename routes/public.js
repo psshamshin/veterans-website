@@ -85,6 +85,14 @@ router.get('/documents', (req, res) => {
   res.render('documents', { title: 'Документы', documents, categories, activePage: 'documents' });
 });
 
+// Gazette "Ветеран"
+router.get('/gazette', (req, res) => {
+  const photos = getAll('SELECT * FROM gazette_photos ORDER BY sort_order ASC, id ASC');
+  const getSetting = key => { const r = getOne('SELECT value FROM settings WHERE key = ?', [key]); return r ? r.value : null; };
+  const gazetteFile = getSetting('gazette_file');
+  res.render('gazette', { title: 'Газета «Ветеран»', activePage: 'gazette', photos, gazetteFile });
+});
+
 // Contacts GET
 router.get('/contacts', (req, res) => {
   res.render('contacts', { title: 'Контакты', activePage: 'contacts' });

@@ -1,0 +1,77 @@
+<%- include('partials/header') %>
+
+<!-- Page Banner -->
+<div class="page-banner">
+  <div class="container">
+    <h1 class="page-banner-title"><i class="fas fa-newspaper me-2"></i>Газета «Ветеран»</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Главная</a></li>
+        <li class="breadcrumb-item active">Газета «Ветеран»</li>
+      </ol>
+    </nav>
+  </div>
+</div>
+
+<main class="py-5">
+  <div class="container">
+
+    <% if (photos.length > 0) { %>
+    <div class="gazette-grid">
+      <% photos.forEach(function(photo) { %>
+      <div class="gazette-item">
+        <img src="<%= photo.image %>" alt="Страница газеты «Ветеран»" loading="lazy">
+      </div>
+      <% }) %>
+    </div>
+    <% } else { %>
+    <div class="empty-state">
+      <i class="fas fa-newspaper fa-3x mb-3" style="color:var(--text-muted); opacity:0.4;"></i>
+      <h4 style="color:var(--primary);">Номер пока не загружен</h4>
+      <p class="text-muted">Страницы газеты появятся здесь после публикации через панель управления.</p>
+    </div>
+    <% } %>
+
+    <% if (gazetteFile) { %>
+    <div class="text-center mt-5">
+      <a href="<%= gazetteFile %>" download class="btn-gazette-download">
+        <i class="fas fa-download me-2"></i>Скачать номер
+      </a>
+    </div>
+    <% } %>
+
+  </div>
+</main>
+
+<%- include('partials/footer') %>
+
+<style>
+.gazette-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+.gazette-item {
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(27,58,107,0.08);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.gazette-item:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.gazette-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.btn-gazette-download {
+  display: inline-flex; align-items: center;
+  padding: 14px 36px; border-radius: var(--radius-pill);
+  background: var(--accent); color: #fff;
+  font-size: 1rem; font-weight: 600; text-decoration: none;
+  box-shadow: 0 4px 16px rgba(150,32,32,0.28);
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+}
+.btn-gazette-download:hover {
+  background: var(--accent-dark); color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(150,32,32,0.32);
+}
+</style>

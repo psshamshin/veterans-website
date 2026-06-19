@@ -140,9 +140,9 @@
 
     <!-- Съезд -->
     <div class="governing-block mb-5">
-      <h3 class="governing-title"><span class="governing-num">01</span>Съезд</h3>
+      <h3 class="governing-title"><span class="governing-num">01</span>Съезд Всероссийской организации ветеранов</h3>
       <div class="row align-items-center g-4 mt-1">
-        <div class="col-lg-8">
+        <div class="col-12 congress-text-col">
           <p class="about-text">
             Съезд является высшим руководящим органом организации. Он созывается не реже одного раза
             в пять лет, определяет основные направления деятельности, утверждает устав, избирает
@@ -150,7 +150,7 @@
           </p>
         </div>
         <% if (chairman) { %>
-        <div class="col-lg-4">
+        <div class="col-12 congress-chairman-col">
           <div class="chairman-card">
             <div class="chairman-photo-wrap">
               <% if (chairman.photo) { %>
@@ -177,7 +177,7 @@
 
     <!-- Центральный Совет -->
     <div class="governing-block mb-5">
-      <h3 class="governing-title"><span class="governing-num">02</span>Центральный Совет</h3>
+      <h3 class="governing-title"><span class="governing-num">02</span>Центральный Совет Всероссийской организации ветеранов</h3>
       <div class="row mt-1">
         <div class="col-lg-7">
           <p class="about-text">
@@ -205,7 +205,7 @@
 
     <!-- Бюро Центрального Совета -->
     <div class="governing-block mb-5">
-      <h3 class="governing-title"><span class="governing-num">03</span>Бюро Центрального Совета</h3>
+      <h3 class="governing-title"><span class="governing-num">03</span>Бюро Центрального Совета Всероссийской организации ветеранов</h3>
       <p class="about-text mt-1 mb-4">
         Бюро Центрального Совета осуществляет оперативное руководство деятельностью организации
         в период между заседаниями Центрального Совета.
@@ -240,7 +240,7 @@
 
     <!-- Аппарат организации -->
     <div class="governing-block">
-      <h3 class="governing-title"><span class="governing-num">04</span>Аппарат организации</h3>
+      <h3 class="governing-title"><span class="governing-num">04</span>Аппарат Всероссийской организации ветеранов</h3>
       <p class="about-text mt-1 mb-4">
         Аппарат организации обеспечивает организационную, правовую и информационно-аналитическую
         деятельность, координирует работу структурных подразделений и региональных советов.
@@ -329,6 +329,11 @@
 .governing-num {
   font-size: 2rem; font-weight: 900; color: rgba(27,58,107,0.1);
   line-height: 1; flex-shrink: 0;
+}
+
+@media (min-width: 992px) {
+  .congress-text-col { flex: 0 0 30%; max-width: 30%; }
+  .congress-chairman-col { flex: 0 0 70%; max-width: 70%; }
 }
 
 /* Chairman */

@@ -85,16 +85,16 @@
           </a>
         </li>
         <li class="nav-item">
+          <a class="nav-link <%= locals.activePage === 'gazette' ? 'active' : '' %>" href="/gazette">
+            <i class="fas fa-newspaper"></i> Газета «Ветеран»
+          </a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link <%= locals.activePage === 'contacts' ? 'active' : '' %>" href="/contacts">
             <i class="fas fa-map-marker-alt"></i> Контакты
           </a>
         </li>
       </ul>
-      <div class="nav-admin-link">
-        <a href="/admin" class="btn btn-admin-sm">
-          <i class="fas fa-lock"></i> Администратор
-        </a>
-      </div>
     </div>
   </div>
 </nav>

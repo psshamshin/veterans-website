@@ -320,6 +320,51 @@ function setSetting(key, value) {
   }
 }
 
+// ─── GAZETTE "ВЕТЕРАН" ────────────────────────────────────────────────────────
+
+router.get('/gazette', requireAdmin, (req, res) => {
+  const photos = getAll('SELECT * FROM gazette_photos ORDER BY sort_order ASC, id ASC');
+  res.render('admin/gazette-list', { title: 'Газета «Ветеран»', photos, gazetteFile: getSetting('gazette_file') });
+});
+
+router.post('/gazette/photos/new', requireAdmin, upload.single('image'), (req, res) => {
+  if (!req.file) {
+    req.flash('error', 'Выберите изображение');
+    return res.redirect('/admin/gazette');
+  }
+  const maxOrder = getOne('SELECT MAX(sort_order) as m FROM gazette_photos').m || 0;
+  run('INSERT INTO gazette_photos (image, sort_order) VALUES (?, ?)', ['/uploads/' + req.file.filename, maxOrder + 1]);
+  req.flash('success', 'Страница добавлена');
+  res.redirect('/admin/gazette');
+});
+
+router.post('/gazette/photos/:id/delete', requireAdmin, (req, res) => {
+  const item = getOne('SELECT * FROM gazette_photos WHERE id = ?', [req.params.id]);
+  if (item && item.image) {
+    const filePath = path.join(__dirname, '..', item.image);
+    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+  }
+  run('DELETE FROM gazette_photos WHERE id = ?', [req.params.id]);
+  req.flash('success', 'Страница удалена');
+  res.redirect('/admin/gazette');
+});
+
+router.post('/gazette/file', requireAdmin, upload.single('file'), (req, res) => {
+  if (!req.file) {
+    req.flash('error', 'Выберите файл');
+    return res.redirect('/admin/gazette');
+  }
+  setSetting('gazette_file', '/uploads/' + req.file.filename);
+  req.flash('success', 'Файл для скачивания обновлён');
+  res.redirect('/admin/gazette');
+});
+
+router.post('/gazette/file/delete', requireAdmin, (req, res) => {
+  run("DELETE FROM settings WHERE key = 'gazette_file'");
+  req.flash('success', 'Файл удалён');
+  res.redirect('/admin/gazette');
+});
+
 router.get('/settings', requireAdmin, (req, res) => {
   res.render('admin/settings', {
     title: 'Настройки',
