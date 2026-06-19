@@ -16,27 +16,41 @@
 <main class="py-5">
   <div class="container">
 
-    <% if (photos.length > 0) { %>
-    <div class="gazette-grid">
-      <% photos.forEach(function(photo) { %>
-      <div class="gazette-item">
-        <img src="<%= photo.image %>" alt="Страница газеты «Ветеран»" loading="lazy">
+    <% if (issues.length > 0) { %>
+    <script>
+      const gazetteIssues = <%- JSON.stringify(issues.map(i => ({ title: i.title, photos: i.photos }))).replace(/</g, '\\u003c') %>;
+    </script>
+
+    <% issues.forEach(function(issue, i) { %>
+    <div class="gazette-issue mb-5">
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+        <h2 class="gazette-issue-title"><%= issue.title %></h2>
+        <% if (issue.file) { %>
+        <a href="<%= issue.file %>" download class="btn-gazette-download">
+          <i class="fas fa-download me-2"></i>Скачать номер
+        </a>
+        <% } %>
       </div>
-      <% }) %>
+
+      <% if (issue.photos.length > 0) { %>
+      <div class="gazette-grid">
+        <% issue.photos.forEach(function(photo, j) { %>
+        <div class="gazette-item" onclick="openLightbox(gazetteIssues[<%= i %>].photos, <%= j %>, gazetteIssues[<%= i %>].title)">
+          <img src="<%= photo %>" alt="Страница газеты «Ветеран»" loading="lazy">
+        </div>
+        <% }) %>
+      </div>
+      <% } else { %>
+      <p class="text-muted mb-0">Страницы этого номера ещё не загружены.</p>
+      <% } %>
     </div>
+    <% }) %>
+
     <% } else { %>
     <div class="empty-state">
       <i class="fas fa-newspaper fa-3x mb-3" style="color:var(--text-muted); opacity:0.4;"></i>
-      <h4 style="color:var(--primary);">Номер пока не загружен</h4>
-      <p class="text-muted">Страницы газеты появятся здесь после публикации через панель управления.</p>
-    </div>
-    <% } %>
-
-    <% if (gazetteFile) { %>
-    <div class="text-center mt-5">
-      <a href="<%= gazetteFile %>" download class="btn-gazette-download">
-        <i class="fas fa-download me-2"></i>Скачать номер
-      </a>
+      <h4 style="color:var(--primary);">Номеров пока нет</h4>
+      <p class="text-muted">Выпуски газеты появятся здесь после публикации через панель управления.</p>
     </div>
     <% } %>
 
@@ -46,12 +60,16 @@
 <%- include('partials/footer') %>
 
 <style>
+.gazette-issue-title { font-size: 1.4rem; font-weight: 700; color: var(--primary); margin: 0; }
+.gazette-issue:not(:last-child) { padding-bottom: 32px; border-bottom: 1px solid rgba(27,58,107,0.1); }
+
 .gazette-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 20px;
 }
 .gazette-item {
+  cursor: pointer;
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: var(--shadow);
@@ -63,9 +81,9 @@
 
 .btn-gazette-download {
   display: inline-flex; align-items: center;
-  padding: 14px 36px; border-radius: var(--radius-pill);
+  padding: 11px 28px; border-radius: var(--radius-pill);
   background: var(--accent); color: #fff;
-  font-size: 1rem; font-weight: 600; text-decoration: none;
+  font-size: 0.92rem; font-weight: 600; text-decoration: none;
   box-shadow: 0 4px 16px rgba(150,32,32,0.28);
   transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
 }
