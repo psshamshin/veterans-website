@@ -505,6 +505,7 @@ img { max-width: 100%; }
 .doc-info { flex: 1; }
 .doc-title { font-weight: 600; font-size: 0.95rem; }
 .doc-date { font-size: 0.78rem; }
+.doc-actions { display: flex; gap: 6px; flex-shrink: 0; }
 
 /* ===== CONTACTS ===== */
 .contact-detail-list { margin-top: 8px; }

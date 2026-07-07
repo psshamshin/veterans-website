@@ -5,7 +5,11 @@
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
       "Bash(git push *)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Read(//c/tmp/**)",
+      "Bash(xxd)",
+      "Bash(node -e ' *)",
+      "Bash(xxd /tmp/title_check.txt)"
     ]
   }
 }
