@@ -125,7 +125,7 @@
         <!-- News grid -->
         <div class="row g-3" id="newsGrid">
           <% news.slice(1).forEach((item, idx) => { %>
-          <div class="col-md-6 news-extra-item">
+          <div class="col-md-4 news-extra-item">
             <div class="card news-card h-100">
               <% if (item.image) { %>
               <img src="<%= item.image %>" alt="<%= item.title %>" class="card-img-top news-card-img-sm">
