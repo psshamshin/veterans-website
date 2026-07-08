@@ -1,0 +1,53 @@
+<%
+  locals.activePage = 'activity-admin';
+  locals.flash_success = flash_success;
+  locals.flash_error = flash_error;
+%>
+<%- include('partials/admin-layout-top') %>
+
+<div class="page-header d-flex justify-content-between align-items-center mb-4">
+  <h2 class="page-title"><i class="fas fa-hands-helping me-2"></i>Деятельность — фото разделов</h2>
+</div>
+
+<% sections.forEach(function(section) { %>
+<div class="admin-card mb-4">
+  <div class="admin-card-header">
+    <h5 class="mb-0"><%= section.label %></h5>
+  </div>
+  <div class="admin-card-body">
+    <div class="row align-items-center g-3">
+      <div class="col-md-4">
+        <% if (photos[section.key]) { %>
+          <img src="<%= photos[section.key] %>" alt="" class="img-fluid rounded" style="max-height:200px;object-fit:cover;width:100%">
+        <% } else { %>
+          <div class="text-center p-4 bg-light rounded text-muted">
+            <i class="fas fa-image fa-2x mb-2"></i>
+            <p class="mb-0 small">Фото не загружено</p>
+          </div>
+        <% } %>
+      </div>
+      <div class="col-md-8">
+        <form action="/admin/activity/<%= section.key %>/photo" method="POST" enctype="multipart/form-data" class="mb-3">
+          <label class="form-label fw-medium">Загрузить фото</label>
+          <div class="input-group">
+            <input type="file" name="image" class="form-control" accept="image/*" required>
+            <button type="submit" class="btn btn-danger">
+              <i class="fas fa-upload me-1"></i>Загрузить
+            </button>
+          </div>
+        </form>
+        <% if (photos[section.key]) { %>
+        <form action="/admin/activity/<%= section.key %>/photo/delete" method="POST"
+              onsubmit="return confirm('Удалить фото?')">
+          <button type="submit" class="btn btn-outline-danger btn-sm">
+            <i class="fas fa-trash me-1"></i>Удалить фото
+          </button>
+        </form>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+<% }); %>
+
+<%- include('partials/admin-layout-bottom') %>

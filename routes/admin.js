@@ -543,4 +543,49 @@ router.post('/settings/password', requireAdmin, (req, res) => {
   res.redirect('/admin/settings');
 });
 
+// ===== ДЕЯТЕЛЬНОСТЬ: ФОТО СЕКЦИЙ =====
+const ACTIVITY_SECTIONS = [
+  { key: 'social',      label: 'Социальная защита' },
+  { key: 'patriotic',   label: 'Патриотическое воспитание' },
+  { key: 'cooperation', label: 'Взаимодействие с органами власти' },
+];
+
+router.get('/activity', requireAdmin, (req, res) => {
+  const photos = {};
+  ACTIVITY_SECTIONS.forEach(s => { photos[s.key] = getSetting('activity_' + s.key + '_image'); });
+  res.render('admin/activity', {
+    title: 'Деятельность — фото',
+    activePage: 'activity-admin',
+    flash_success: req.flash('success'),
+    flash_error: req.flash('error'),
+    sections: ACTIVITY_SECTIONS,
+    photos,
+  });
+});
+
+router.post('/activity/:section/photo', requireAdmin, upload.single('image'), (req, res) => {
+  const section = req.params.section;
+  if (!ACTIVITY_SECTIONS.find(s => s.key === section)) return res.redirect('/admin/activity');
+  if (!req.file) {
+    req.flash('error', 'Файл не выбран');
+    return res.redirect('/admin/activity');
+  }
+  setSetting('activity_' + section + '_image', '/uploads/' + req.file.filename);
+  req.flash('success', 'Фото сохранено');
+  res.redirect('/admin/activity');
+});
+
+router.post('/activity/:section/photo/delete', requireAdmin, (req, res) => {
+  const section = req.params.section;
+  if (!ACTIVITY_SECTIONS.find(s => s.key === section)) return res.redirect('/admin/activity');
+  const current = getSetting('activity_' + section + '_image');
+  if (current) {
+    const fp = path.join(__dirname, '..', 'public', current.replace(/^\//, ''));
+    try { fs.unlinkSync(fp); } catch (e) {}
+    setSetting('activity_' + section + '_image', '');
+  }
+  req.flash('success', 'Фото удалено');
+  res.redirect('/admin/activity');
+});
+
 module.exports = router;

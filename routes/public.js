@@ -154,7 +154,12 @@ router.get('/activity', (req, res) => {
   const contestsTitle = getSetting('contests_title') || 'Конкурсы и акции';
   const contestsText = getSetting('contests_text') || '';
   const contestPhotos = getAll('SELECT image FROM contest_photos ORDER BY sort_order ASC, id ASC').map(p => p.image);
-  res.render('activity', { title: 'Деятельность', activePage: 'activity', contestsTitle, contestsText, contestPhotos });
+  const activityPhotos = {
+    social:      getSetting('activity_social_image') || '',
+    patriotic:   getSetting('activity_patriotic_image') || '',
+    cooperation: getSetting('activity_cooperation_image') || '',
+  };
+  res.render('activity', { title: 'Деятельность', activePage: 'activity', contestsTitle, contestsText, contestPhotos, activityPhotos });
 });
 
 router.get('/regions', (req, res) => {
