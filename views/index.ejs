@@ -125,7 +125,7 @@
         <!-- News grid -->
         <div class="row g-3" id="newsGrid">
           <% news.slice(1).forEach((item, idx) => { %>
-          <div class="col-md-6 news-extra-item" style="<%= idx >= 5 ? 'display:none' : '' %>">
+          <div class="col-md-6 news-extra-item" style="<%= idx >= 9 ? 'display:none' : '' %>">
             <div class="card news-card h-100">
               <% if (item.image) { %>
               <img src="<%= item.image %>" alt="<%= item.title %>" class="card-img-top news-card-img-sm">
@@ -151,11 +151,11 @@
           <% }) %>
         </div>
 
-        <% if (news.length > 6) { %>
+        <% if (news.length > 10) { %>
         <div class="text-center mt-4" id="loadMoreWrap">
           <button class="btn btn-load-more" id="loadMoreBtn" onclick="loadMoreNews()">
             <i class="fas fa-chevron-down me-2"></i>Загрузить ещё
-            <span class="load-more-count">(<%= news.length - 6 %> новостей)</span>
+            <span class="load-more-count">(<%= news.length - 10 %> новостей)</span>
           </button>
         </div>
         <% } %>
