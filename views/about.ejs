@@ -21,6 +21,9 @@
     <div class="content-divider"></div>
     <div class="row">
       <div class="col-lg-10">
+        <% if (aboutTexts.history) { %>
+          <% aboutTexts.history.split(/\n\n+/).forEach(function(para) { if (para.trim()) { %><p class="about-text"><%- para.trim().replace(/\n/g, '<br>') %></p><% } }); %>
+        <% } else { %>
         <p class="about-text">
           В 2026 году Всероссийской общественной организации ветеранов (пенсионеров) войны, труда,
           Вооруженных Сил и правоохранительных органов исполнится 40 лет. В конце 80-х годов руководство
@@ -78,6 +81,7 @@
           из 89 (кроме Республики Ингушетия, Чукотского автономного округа, Херсонской и Запорожской
           областей).
         </p>
+        <% } %>
       </div>
     </div>
   </section>
@@ -115,12 +119,16 @@
         <div class="about-section-label"><i class="fas fa-sitemap me-2"></i>Структура</div>
         <h2 class="about-section-title">Структура организации</h2>
         <div class="content-divider"></div>
+        <% if (aboutTexts.structure) { %>
+          <% aboutTexts.structure.split(/\n\n+/).forEach(function(para) { if (para.trim()) { %><p class="about-text"><%- para.trim().replace(/\n/g, '<br>') %></p><% } }); %>
+        <% } else { %>
         <p class="about-text">
           Организация построена по территориально-производственному принципу и включает четыре уровня:
           Центральный Совет, региональные советы в 85 субъектах Российской Федерации, районные
           (городские) советы и первичные организации на предприятиях, в учреждениях и по месту
           жительства ветеранов.
         </p>
+        <% } %>
         <div class="structure-levels mt-4">
           <div class="structure-level-item">
             <div class="slevel-dot slevel-1"></div>
@@ -171,11 +179,15 @@
       <h3 class="governing-title"><span class="governing-num">01</span>Съезд Всероссийской организации ветеранов</h3>
       <div class="row align-items-center g-3 mt-1">
         <div class="col-12 congress-text-col">
+          <% if (aboutTexts.congress) { %>
+            <% aboutTexts.congress.split(/\n\n+/).forEach(function(para) { if (para.trim()) { %><p class="about-text mb-0"><%- para.trim().replace(/\n/g, '<br>') %></p><% } }); %>
+          <% } else { %>
           <p class="about-text mb-0">
             Съезд является высшим руководящим органом организации. Он созывается не реже одного раза
             в пять лет, определяет основные направления деятельности, утверждает устав, избирает
             Центральный Совет и Председателя организации.
           </p>
+          <% } %>
         </div>
         <% if (chairman) { %>
         <div class="col-12 congress-chairman-col">

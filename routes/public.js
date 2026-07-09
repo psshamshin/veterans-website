@@ -27,13 +27,18 @@ router.get('/', (req, res) => {
 
 // About
 router.get('/about', (req, res) => {
-  const chairman = getOne('SELECT * FROM leaders ORDER BY sort_order ASC LIMIT 1');
-  const bureau   = getAll('SELECT * FROM leaders ORDER BY sort_order ASC LIMIT -1 OFFSET 1');
+  const chairman = getOne("SELECT * FROM leaders WHERE role='chairman' ORDER BY sort_order ASC LIMIT 1");
+  const bureau   = getAll("SELECT * FROM leaders WHERE role='bureau' ORDER BY sort_order ASC");
   const staff    = getAll('SELECT * FROM staff ORDER BY sort_order ASC');
   const getSetting = key => { const r = getOne('SELECT value FROM settings WHERE key = ?', [key]); return r ? r.value : null; };
   const structureImage = getSetting('about_structure_image');
   const historyLeaders = getAll('SELECT * FROM history_leaders ORDER BY sort_order ASC, id ASC');
-  res.render('about', { title: 'Об организации', activePage: 'about', chairman, bureau, staff, structureImage, centralCouncil, historyLeaders });
+  const aboutTexts = {
+    history:   getSetting('about_history')   || '',
+    structure: getSetting('about_structure') || '',
+    congress:  getSetting('about_congress')  || '',
+  };
+  res.render('about', { title: 'Об организации', activePage: 'about', chairman, bureau, staff, structureImage, centralCouncil, historyLeaders, aboutTexts });
 });
 
 // Leadership

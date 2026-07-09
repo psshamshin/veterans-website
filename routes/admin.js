@@ -625,4 +625,32 @@ router.post('/history-leaders/:id/photo/delete', requireAdmin, (req, res) => {
   res.redirect('/admin/history-leaders');
 });
 
+// ===== ОБ ОРГАНИЗАЦИИ: РЕДАКТИРОВАНИЕ ТЕКСТОВ =====
+const ABOUT_SECTIONS = [
+  { key: 'about_history',   label: 'История организации' },
+  { key: 'about_structure', label: 'Структура — описание' },
+  { key: 'about_congress',  label: 'Съезд — описание' },
+];
+
+router.get('/about-page', requireAdmin, (req, res) => {
+  const texts = {};
+  ABOUT_SECTIONS.forEach(s => { texts[s.key] = getSetting(s.key) || ''; });
+  res.render('admin/about-page', {
+    title: 'Об организации — тексты',
+    activePage: 'about-page',
+    flash_success: req.flash('success'),
+    flash_error: req.flash('error'),
+    sections: ABOUT_SECTIONS,
+    texts,
+  });
+});
+
+router.post('/about-page/:key', requireAdmin, (req, res) => {
+  const { key } = req.params;
+  if (!ABOUT_SECTIONS.find(s => s.key === key)) return res.redirect('/admin/about-page');
+  setSetting(key, req.body.text || '');
+  req.flash('success', 'Текст сохранён');
+  res.redirect('/admin/about-page');
+});
+
 module.exports = router;
