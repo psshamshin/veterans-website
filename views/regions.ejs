@@ -59,11 +59,6 @@
             </div>
             <% } %>
             <div class="rcard-contacts">
-              <% if (r.phone) { %>
-              <a href="tel:<%= r.phone.replace(/[\s\(\)\-]/g,'') %>" class="rcard-contact-link">
-                <i class="fas fa-phone"></i><%= r.phone %>
-              </a>
-              <% } %>
               <% if (r.email) { %>
               <a href="mailto:<%= r.email %>" class="rcard-contact-link">
                 <i class="fas fa-envelope"></i><%= r.email %>
