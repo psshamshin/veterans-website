@@ -154,17 +154,15 @@ function initDatabase() {
   // Remove Ogarkov from history leaders
   try { run("DELETE FROM history_leaders WHERE name LIKE '%ОГАРКОВ%'"); } catch (_) {}
 
-  // Sync Bogovik bio from chairman card in leaders table
+  // Fix Bogovik bio in history_leaders
   try {
-    const ch = getOne("SELECT bio FROM leaders WHERE role='chairman' LIMIT 1");
-    if (ch && ch.bio) {
-      run("UPDATE history_leaders SET bio = ? WHERE name LIKE '%БОГОВИК%'", [ch.bio]);
-    }
+    run("UPDATE history_leaders SET bio = 'Советский и российский военно-политический и общественный деятель, полковник в отставке, участник боевых действий во Вьетнаме и других горячих точках. Родился в 1944 году. С августа 2025 года по настоящее время – исполняющий обязанности Председателя Всероссийской организации ветеранов.' WHERE name LIKE '%БОГОВИК%'");
   } catch (_) {}
 
-  // Update chairman position title
+  // Update chairman position and bio
   try {
     run("UPDATE leaders SET position = 'Исполняющий обязанности Председателя Всероссийской организации ветеранов' WHERE role = 'chairman'");
+    run("UPDATE leaders SET bio = 'Родился в 1944 году. Советский и российский военно-политический и общественный деятель, полковник в отставке, участник боевых действий во Вьетнаме и других горячих точках. С августа 2025 года по настоящее время – исполняющий обязанности Председателя Всероссийской организации ветеранов.' WHERE role = 'chairman'");
   } catch (_) {}
 
   // Migrate gazette_issues: add cover column if missing (each issue = one cover + one PDF)
