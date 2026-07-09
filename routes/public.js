@@ -27,8 +27,8 @@ router.get('/', (req, res) => {
 
 // About
 router.get('/about', (req, res) => {
-  const chairman = getOne("SELECT * FROM leaders WHERE role='chairman' ORDER BY sort_order ASC LIMIT 1");
-  const bureau   = getAll("SELECT * FROM leaders WHERE role='bureau' ORDER BY sort_order ASC");
+  const chairman = getOne('SELECT * FROM leaders ORDER BY sort_order ASC LIMIT 1');
+  const bureau   = getAll('SELECT * FROM leaders ORDER BY sort_order ASC LIMIT -1 OFFSET 1');
   const staff    = getAll('SELECT * FROM staff ORDER BY sort_order ASC');
   const getSetting = key => { const r = getOne('SELECT value FROM settings WHERE key = ?', [key]); return r ? r.value : null; };
   const structureImage = getSetting('about_structure_image');
