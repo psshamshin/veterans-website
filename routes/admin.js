@@ -588,4 +588,41 @@ router.post('/activity/:section/photo/delete', requireAdmin, (req, res) => {
   res.redirect('/admin/activity');
 });
 
+// ===== ИСТОРИЯ: РУКОВОДИТЕЛИ =====
+router.get('/history-leaders', requireAdmin, (req, res) => {
+  const leaders = getAll('SELECT * FROM history_leaders ORDER BY sort_order ASC, id ASC');
+  res.render('admin/history-leaders', {
+    title: 'Руководители организации',
+    activePage: 'history-leaders',
+    flash_success: req.flash('success'),
+    flash_error: req.flash('error'),
+    leaders,
+  });
+});
+
+router.post('/history-leaders/:id/photo', requireAdmin, upload.single('photo'), (req, res) => {
+  const { id } = req.params;
+  if (!req.file) { req.flash('error', 'Файл не выбран'); return res.redirect('/admin/history-leaders'); }
+  const current = getOne('SELECT photo FROM history_leaders WHERE id = ?', [id]);
+  if (current && current.photo) {
+    const fp = path.join(__dirname, '..', 'public', current.photo.replace(/^\//, ''));
+    try { fs.unlinkSync(fp); } catch (_) {}
+  }
+  run('UPDATE history_leaders SET photo = ? WHERE id = ?', ['/uploads/' + req.file.filename, id]);
+  req.flash('success', 'Фото сохранено');
+  res.redirect('/admin/history-leaders');
+});
+
+router.post('/history-leaders/:id/photo/delete', requireAdmin, (req, res) => {
+  const { id } = req.params;
+  const current = getOne('SELECT photo FROM history_leaders WHERE id = ?', [id]);
+  if (current && current.photo) {
+    const fp = path.join(__dirname, '..', 'public', current.photo.replace(/^\//, ''));
+    try { fs.unlinkSync(fp); } catch (_) {}
+    run('UPDATE history_leaders SET photo = ? WHERE id = ?', ['', id]);
+  }
+  req.flash('success', 'Фото удалено');
+  res.redirect('/admin/history-leaders');
+});
+
 module.exports = router;

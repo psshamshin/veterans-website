@@ -32,7 +32,8 @@ router.get('/about', (req, res) => {
   const staff    = getAll('SELECT * FROM staff ORDER BY sort_order ASC');
   const getSetting = key => { const r = getOne('SELECT value FROM settings WHERE key = ?', [key]); return r ? r.value : null; };
   const structureImage = getSetting('about_structure_image');
-  res.render('about', { title: 'Об организации', activePage: 'about', chairman, bureau, staff, structureImage, centralCouncil });
+  const historyLeaders = getAll('SELECT * FROM history_leaders ORDER BY sort_order ASC, id ASC');
+  res.render('about', { title: 'Об организации', activePage: 'about', chairman, bureau, staff, structureImage, centralCouncil, historyLeaders });
 });
 
 // Leadership

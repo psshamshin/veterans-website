@@ -82,7 +82,31 @@
     </div>
   </section>
 
-  <hr class="about-divider">
+  <!-- ── Руководители в разные годы ──────────────────────────────────────────── -->
+  <% if (historyLeaders && historyLeaders.length > 0) { %>
+  <div class="history-leaders-grid mt-5">
+    <% historyLeaders.forEach(function(leader) { %>
+    <div class="history-leader-card">
+      <% if (leader.photo) { %>
+        <div class="history-leader-photo">
+          <img src="<%= leader.photo %>" alt="<%= leader.name %>">
+        </div>
+      <% } else { %>
+        <div class="history-leader-photo history-leader-no-photo">
+          <i class="fas fa-user"></i>
+        </div>
+      <% } %>
+      <div class="history-leader-info">
+        <div class="history-leader-name"><%= leader.name %></div>
+        <div class="history-leader-years"><%= leader.years %></div>
+        <div class="history-leader-bio"><%= leader.bio %></div>
+      </div>
+    </div>
+    <% }); %>
+  </div>
+  <% } %>
+
+  <hr class="about-divider mt-5">
 
   <!-- ── 2. Структура ───────────────────────────────────────────────────────── -->
   <section class="about-section my-5">
@@ -295,6 +319,27 @@
 }
 .about-text { font-size: 1rem; line-height: 1.85; color: #444; margin-bottom: 12px; }
 .about-divider { border-color: rgba(27,58,107,0.1); }
+
+/* History leaders grid */
+.history-leaders-grid { display: flex; flex-direction: column; gap: 24px; }
+.history-leader-card {
+  display: flex; gap: 20px; align-items: flex-start;
+  padding: 20px; background: var(--bg);
+  border-radius: var(--radius); border-left: 4px solid var(--accent);
+  box-shadow: var(--shadow);
+}
+.history-leader-photo {
+  width: 100px; height: 120px; min-width: 100px;
+  border-radius: var(--radius-sm); overflow: hidden;
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.history-leader-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.history-leader-no-photo { color: rgba(255,255,255,0.35); font-size: 2.5rem; }
+.history-leader-name { font-size: 1.05rem; font-weight: 700; color: var(--primary); margin-bottom: 2px; }
+.history-leader-years { font-size: 0.85rem; color: var(--accent); font-weight: 600; margin-bottom: 8px; }
+.history-leader-bio { font-size: 0.88rem; color: #444; line-height: 1.6; }
 
 /* Structure levels */
 .structure-levels { display: flex; flex-direction: column; gap: 14px; }
