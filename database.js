@@ -151,6 +151,17 @@ function initDatabase() {
     );
   `);
 
+  // Remove Ogarkov from history leaders
+  try { run("DELETE FROM history_leaders WHERE name LIKE '%ОГАРКОВ%'"); } catch (_) {}
+
+  // Sync Bogovik bio from chairman card in leaders table
+  try {
+    const ch = getOne("SELECT bio FROM leaders WHERE role='chairman' LIMIT 1");
+    if (ch && ch.bio) {
+      run("UPDATE history_leaders SET bio = ? WHERE name LIKE '%БОГОВИК%'", [ch.bio]);
+    }
+  } catch (_) {}
+
   // Migrate gazette_issues: add cover column if missing (each issue = one cover + one PDF)
   try { db.exec(`ALTER TABLE gazette_issues ADD COLUMN cover TEXT`); } catch (_) {}
 
