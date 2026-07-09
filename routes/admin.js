@@ -636,6 +636,7 @@ const ABOUT_SECTIONS = [
 router.get('/about-page', requireAdmin, (req, res) => {
   const texts = {};
   ABOUT_SECTIONS.forEach(s => { texts[s.key] = getSetting(s.key) || ''; });
+  const chairman = getOne('SELECT * FROM leaders ORDER BY sort_order ASC LIMIT 1');
   res.render('admin/about-page', {
     title: 'Об организации — тексты',
     activePage: 'about-page',
@@ -643,7 +644,22 @@ router.get('/about-page', requireAdmin, (req, res) => {
     flash_error: req.flash('error'),
     sections: ABOUT_SECTIONS,
     texts,
+    chairman,
   });
+});
+
+router.post('/about-page/chairman', requireAdmin, upload.single('photo'), (req, res) => {
+  const { name, position, bio } = req.body;
+  const chairman = getOne('SELECT * FROM leaders ORDER BY sort_order ASC LIMIT 1');
+  if (!chairman) { req.flash('error', 'Председатель не найден'); return res.redirect('/admin/about-page'); }
+  let photo = chairman.photo || '';
+  if (req.file) {
+    if (photo) { try { fs.unlinkSync(path.join(__dirname, '..', 'public', photo.replace(/^\//, ''))); } catch (_) {} }
+    photo = '/uploads/' + req.file.filename;
+  }
+  run('UPDATE leaders SET name=?, position=?, bio=?, photo=? WHERE id=?', [name, position, bio, photo, chairman.id]);
+  req.flash('success', 'Данные председателя сохранены');
+  res.redirect('/admin/about-page');
 });
 
 router.post('/about-page/:key', requireAdmin, (req, res) => {
