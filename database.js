@@ -162,6 +162,11 @@ function initDatabase() {
     }
   } catch (_) {}
 
+  // Update chairman position title
+  try {
+    run("UPDATE leaders SET position = 'Исполняющий обязанности Председателя Всероссийской организации ветеранов' WHERE role = 'chairman'");
+  } catch (_) {}
+
   // Migrate gazette_issues: add cover column if missing (each issue = one cover + one PDF)
   try { db.exec(`ALTER TABLE gazette_issues ADD COLUMN cover TEXT`); } catch (_) {}
 
