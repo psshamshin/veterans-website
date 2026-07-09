@@ -122,10 +122,10 @@
           </div>
         </div>
 
-        <!-- News grid -->
-        <div class="row g-3" id="newsGrid">
-          <% news.slice(1).forEach((item, idx) => { %>
-          <div class="col-md-4 news-extra-item">
+        <!-- First row: 2 columns -->
+        <div class="row g-3">
+          <% news.slice(1, 3).forEach(function(item) { %>
+          <div class="col-md-6">
             <div class="card news-card h-100">
               <% if (item.image) { %>
               <img src="<%= item.image %>" alt="<%= item.title %>" class="card-img-top news-card-img-sm">
@@ -148,7 +148,7 @@
               </div>
             </div>
           </div>
-          <% }) %>
+          <% }); %>
         </div>
 
 
@@ -232,6 +232,38 @@
 
     </div>
   </div>
+
+  <!-- Remaining news: 3 columns full width -->
+  <% if (news.length > 3) { %>
+  <div class="row g-3 mt-2">
+    <% news.slice(3).forEach(function(item) { %>
+    <div class="col-md-4">
+      <div class="card news-card h-100">
+        <% if (item.image) { %>
+        <img src="<%= item.image %>" alt="<%= item.title %>" class="card-img-top news-card-img-sm">
+        <% } else { %>
+        <div class="news-card-img-placeholder">
+          <i class="fas fa-newspaper"></i>
+        </div>
+        <% } %>
+        <div class="card-body">
+          <span class="news-category badge badge-sm"><%= item.category %></span>
+          <h5 class="news-title mt-1">
+            <a href="/news/<%= item.id %>"><%= item.title %></a>
+          </h5>
+          <p class="news-excerpt-sm"><%= (item.excerpt || item.content.replace(/<[^>]*>/g,'')).substring(0,120) %>...</p>
+          <div class="news-meta-sm">
+            <span><i class="fas fa-calendar"></i>
+              <%= new Date(item.published_at).toLocaleDateString('ru-RU', {day:'numeric',month:'long',year:'numeric'}) %>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% }); %>
+  </div>
+  <% } %>
+
 </div>
 
 
