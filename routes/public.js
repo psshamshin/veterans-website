@@ -34,9 +34,10 @@ router.get('/about', (req, res) => {
   const structureImage = getSetting('about_structure_image');
   const historyLeaders = getAll('SELECT * FROM history_leaders ORDER BY sort_order ASC, id ASC');
   const aboutTexts = {
-    history:   getSetting('about_history')   || '',
-    structure: getSetting('about_structure') || '',
-    congress:  getSetting('about_congress')  || '',
+    history:        getSetting('about_history')        || '',
+    structure:      getSetting('about_structure')      || '',
+    congress_title: getSetting('about_congress_title') || '',
+    congress:       getSetting('about_congress')       || '',
   };
   res.render('about', { title: 'Об организации', activePage: 'about', chairman, bureau, staff, structureImage, centralCouncil, historyLeaders, aboutTexts });
 });

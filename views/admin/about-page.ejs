@@ -20,9 +20,13 @@
   <div class="admin-card-body">
     <form action="/admin/about-page/<%= section.key %>" method="POST">
       <div class="mb-3">
-        <textarea name="text" class="form-control font-monospace" rows="10"
-          placeholder="Введите текст. Пустая строка между абзацами создаёт новый абзац."><%= texts[section.key] %></textarea>
-        <div class="form-text">Разделяйте абзацы пустой строкой.</div>
+        <% if (section.single_line) { %>
+          <input type="text" name="text" class="form-control" value="<%= texts[section.key] %>">
+        <% } else { %>
+          <textarea name="text" class="form-control font-monospace" rows="<%= section.key === 'about_history' ? 16 : 6 %>"
+            placeholder="Разделяйте абзацы пустой строкой."><%= texts[section.key] %></textarea>
+          <div class="form-text">Разделяйте абзацы пустой строкой.</div>
+        <% } %>
       </div>
       <button type="submit" class="btn btn-danger">
         <i class="fas fa-save me-1"></i>Сохранить
