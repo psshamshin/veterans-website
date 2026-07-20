@@ -217,14 +217,10 @@
 
     <!-- Центральный Совет -->
     <div class="governing-block mb-5">
-      <h3 class="governing-title"><span class="governing-num">02</span>Центральный Совет Всероссийской организации ветеранов</h3>
+      <h3 class="governing-title"><span class="governing-num">02</span><%= aboutTexts.central_council_title || 'Центральный Совет Всероссийской организации ветеранов' %></h3>
       <div class="row mt-1">
         <div class="col-lg-7">
-          <p class="about-text">
-            Центральный Совет — постоянно действующий руководящий орган организации между съездами.
-            Осуществляет руководство деятельностью организации, рассматривает важнейшие вопросы
-            работы с ветеранами, утверждает бюджет и отчёты о деятельности.
-          </p>
+          <p class="about-text"><%= aboutTexts.central_council_text || '' %></p>
         </div>
       </div>
       <% if (centralCouncil && centralCouncil.length > 0) { %>

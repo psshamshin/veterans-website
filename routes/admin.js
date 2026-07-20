@@ -627,10 +627,12 @@ router.post('/history-leaders/:id/photo/delete', requireAdmin, (req, res) => {
 
 // ===== ОБ ОРГАНИЗАЦИИ: РЕДАКТИРОВАНИЕ ТЕКСТОВ =====
 const ABOUT_SECTIONS = [
-  { key: 'about_history',        label: 'История организации' },
-  { key: 'about_structure',      label: 'Структура — описание' },
-  { key: 'about_congress_title', label: 'Съезд — заголовок', single_line: true },
-  { key: 'about_congress',       label: 'Съезд — описание' },
+  { key: 'about_history',               label: 'История организации' },
+  { key: 'about_structure',             label: 'Структура — описание' },
+  { key: 'about_congress_title',        label: 'Съезд — заголовок', single_line: true },
+  { key: 'about_congress',              label: 'Съезд — описание' },
+  { key: 'about_central_council_title', label: 'Центральный совет — заголовок', single_line: true },
+  { key: 'about_central_council_text',  label: 'Центральный совет — описание' },
 ];
 
 router.get('/about-page', requireAdmin, (req, res) => {
