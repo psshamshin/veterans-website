@@ -46,10 +46,6 @@
         </div>
         <div class="doc-info">
           <div class="doc-title"><%= doc.title %></div>
-          <div class="doc-date text-muted small">
-            <i class="fas fa-calendar"></i>
-            <%= new Date(doc.uploaded_at).toLocaleDateString('ru-RU', {day:'numeric',month:'long',year:'numeric'}) %>
-          </div>
         </div>
         <div class="doc-actions">
           <a href="<%= doc.filename %>" target="_blank" class="btn btn-outline-danger btn-sm">

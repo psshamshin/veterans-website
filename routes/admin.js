@@ -603,6 +603,92 @@ router.post('/activity/:section/photo/delete', requireAdmin, (req, res) => {
   res.redirect('/admin/activity');
 });
 
+// ===== ДЕЯТЕЛЬНОСТЬ: КОНСТРУКТОР СТРАНИЦ =====
+router.get('/activity/:section/page', requireAdmin, (req, res) => {
+  const { section } = req.params;
+  const sec = ACTIVITY_SECTIONS.find(s => s.key === section);
+  if (!sec) return res.redirect('/admin/activity');
+  const blocks = getAll('SELECT * FROM activity_page_blocks WHERE section = ? ORDER BY sort_order ASC, id ASC', [section]);
+  res.render('admin/activity-section', {
+    title: sec.label + ' — страница',
+    activePage: 'activity-admin',
+    flash_success: req.flash('success'),
+    flash_error: req.flash('error'),
+    section: sec,
+    blocks,
+  });
+});
+
+router.post('/activity/:section/page/blocks/text', requireAdmin, (req, res) => {
+  const { section } = req.params;
+  if (!ACTIVITY_SECTIONS.find(s => s.key === section)) return res.redirect('/admin/activity');
+  const maxRow = getOne('SELECT MAX(sort_order) as m FROM activity_page_blocks WHERE section = ?', [section]);
+  const nextOrder = (maxRow && maxRow.m != null ? maxRow.m : 0) + 1;
+  run('INSERT INTO activity_page_blocks (section, type, content, sort_order) VALUES (?, ?, ?, ?)',
+    [section, 'text', req.body.content || '', nextOrder]);
+  req.flash('success', 'Текстовый блок добавлен');
+  res.redirect('/admin/activity/' + section + '/page');
+});
+
+router.post('/activity/:section/page/blocks/image', requireAdmin, upload.single('image'), (req, res) => {
+  const { section } = req.params;
+  if (!ACTIVITY_SECTIONS.find(s => s.key === section)) return res.redirect('/admin/activity');
+  if (!req.file) { req.flash('error', 'Файл не выбран'); return res.redirect('/admin/activity/' + section + '/page'); }
+  const maxRow = getOne('SELECT MAX(sort_order) as m FROM activity_page_blocks WHERE section = ?', [section]);
+  const nextOrder = (maxRow && maxRow.m != null ? maxRow.m : 0) + 1;
+  run('INSERT INTO activity_page_blocks (section, type, content, sort_order) VALUES (?, ?, ?, ?)',
+    [section, 'image', '/uploads/' + req.file.filename, nextOrder]);
+  req.flash('success', 'Фото добавлено');
+  res.redirect('/admin/activity/' + section + '/page');
+});
+
+router.post('/activity/:section/page/blocks/:id/edit', requireAdmin, (req, res) => {
+  const { section, id } = req.params;
+  if (!ACTIVITY_SECTIONS.find(s => s.key === section)) return res.redirect('/admin/activity');
+  run('UPDATE activity_page_blocks SET content = ? WHERE id = ? AND section = ?', [req.body.content || '', id, section]);
+  req.flash('success', 'Блок обновлён');
+  res.redirect('/admin/activity/' + section + '/page');
+});
+
+router.post('/activity/:section/page/blocks/:id/delete', requireAdmin, (req, res) => {
+  const { section, id } = req.params;
+  if (!ACTIVITY_SECTIONS.find(s => s.key === section)) return res.redirect('/admin/activity');
+  const block = getOne('SELECT * FROM activity_page_blocks WHERE id = ? AND section = ?', [id, section]);
+  if (block && block.type === 'image' && block.content) {
+    const fp = path.join(__dirname, '..', 'public', block.content.replace(/^\//, ''));
+    try { fs.unlinkSync(fp); } catch (e) {}
+  }
+  run('DELETE FROM activity_page_blocks WHERE id = ? AND section = ?', [id, section]);
+  req.flash('success', 'Блок удалён');
+  res.redirect('/admin/activity/' + section + '/page');
+});
+
+router.post('/activity/:section/page/blocks/:id/up', requireAdmin, (req, res) => {
+  const { section, id } = req.params;
+  if (!ACTIVITY_SECTIONS.find(s => s.key === section)) return res.redirect('/admin/activity');
+  const blocks = getAll('SELECT * FROM activity_page_blocks WHERE section = ? ORDER BY sort_order ASC, id ASC', [section]);
+  const idx = blocks.findIndex(b => String(b.id) === String(id));
+  if (idx > 0) {
+    const a = blocks[idx], b = blocks[idx - 1];
+    run('UPDATE activity_page_blocks SET sort_order = ? WHERE id = ?', [b.sort_order, a.id]);
+    run('UPDATE activity_page_blocks SET sort_order = ? WHERE id = ?', [a.sort_order, b.id]);
+  }
+  res.redirect('/admin/activity/' + section + '/page');
+});
+
+router.post('/activity/:section/page/blocks/:id/down', requireAdmin, (req, res) => {
+  const { section, id } = req.params;
+  if (!ACTIVITY_SECTIONS.find(s => s.key === section)) return res.redirect('/admin/activity');
+  const blocks = getAll('SELECT * FROM activity_page_blocks WHERE section = ? ORDER BY sort_order ASC, id ASC', [section]);
+  const idx = blocks.findIndex(b => String(b.id) === String(id));
+  if (idx >= 0 && idx < blocks.length - 1) {
+    const a = blocks[idx], b = blocks[idx + 1];
+    run('UPDATE activity_page_blocks SET sort_order = ? WHERE id = ?', [b.sort_order, a.id]);
+    run('UPDATE activity_page_blocks SET sort_order = ? WHERE id = ?', [a.sort_order, b.id]);
+  }
+  res.redirect('/admin/activity/' + section + '/page');
+});
+
 // ===== ИСТОРИЯ: РУКОВОДИТЕЛИ =====
 router.get('/history-leaders', requireAdmin, (req, res) => {
   const leaders = getAll('SELECT * FROM history_leaders ORDER BY sort_order ASC, id ASC');

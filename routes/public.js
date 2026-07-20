@@ -206,7 +206,8 @@ router.get('/activity/:section', (req, res) => {
   if (!ACTIVITY_DETAIL_PAGES[key]) return res.status(404).render('404', { title: 'Не найдено' });
   const getSetting = k => { const r = getOne('SELECT value FROM settings WHERE key = ?', [k]); return r ? r.value : null; };
   const title = getSetting('activity_' + key + '_title') || ACTIVITY_DETAIL_PAGES[key];
-  res.render('activity-detail', { title, section: key, activePage: 'activity' });
+  const blocks = getAll('SELECT * FROM activity_page_blocks WHERE section = ? ORDER BY sort_order ASC, id ASC', [key]);
+  res.render('activity-detail', { title, section: key, blocks, activePage: 'activity' });
 });
 
 module.exports = router;

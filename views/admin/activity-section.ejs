@@ -1,0 +1,121 @@
+<%
+  locals.activePage = 'activity-admin';
+  locals.flash_success = flash_success;
+  locals.flash_error = flash_error;
+%>
+<%- include('partials/admin-layout-top') %>
+
+<div class="page-header d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <a href="/admin/activity" class="btn btn-outline-secondary btn-sm me-3">
+      <i class="fas fa-arrow-left me-1"></i>Назад
+    </a>
+    <span class="page-title h4 mb-0"><i class="fas fa-layer-group me-2"></i><%= section.label %> — страница</span>
+  </div>
+  <a href="/activity/<%= section.key %>" target="_blank" class="btn btn-outline-secondary btn-sm">
+    <i class="fas fa-external-link-alt me-1"></i>Просмотр
+  </a>
+</div>
+
+<!-- Existing blocks -->
+<% if (blocks.length > 0) { %>
+<div class="admin-card mb-4">
+  <div class="admin-card-header"><h5 class="mb-0">Блоки страницы (в порядке отображения)</h5></div>
+  <div class="admin-card-body p-0">
+    <% blocks.forEach(function(block, i) { %>
+    <div class="block-item border-bottom p-3 d-flex gap-3 align-items-start">
+
+      <!-- Type badge -->
+      <div class="flex-shrink-0 pt-1">
+        <% if (block.type === 'text') { %>
+          <span class="badge bg-primary"><i class="fas fa-align-left me-1"></i>Текст</span>
+        <% } else { %>
+          <span class="badge bg-success"><i class="fas fa-image me-1"></i>Фото</span>
+        <% } %>
+      </div>
+
+      <!-- Content / edit -->
+      <div class="flex-grow-1">
+        <% if (block.type === 'text') { %>
+        <form action="/admin/activity/<%= section.key %>/page/blocks/<%= block.id %>/edit" method="POST">
+          <textarea name="content" class="form-control form-control-sm font-monospace mb-2" rows="4"><%= block.content %></textarea>
+          <button type="submit" class="btn btn-sm btn-outline-primary">
+            <i class="fas fa-save me-1"></i>Сохранить
+          </button>
+        </form>
+        <% } else { %>
+        <img src="<%= block.content %>" alt="" class="img-fluid rounded" style="max-height:160px;object-fit:cover">
+        <% } %>
+      </div>
+
+      <!-- Reorder + delete -->
+      <div class="flex-shrink-0 d-flex flex-column gap-1">
+        <% if (i > 0) { %>
+        <form action="/admin/activity/<%= section.key %>/page/blocks/<%= block.id %>/up" method="POST">
+          <button type="submit" class="btn btn-sm btn-outline-secondary w-100" title="Вверх">
+            <i class="fas fa-chevron-up"></i>
+          </button>
+        </form>
+        <% } %>
+        <% if (i < blocks.length - 1) { %>
+        <form action="/admin/activity/<%= section.key %>/page/blocks/<%= block.id %>/down" method="POST">
+          <button type="submit" class="btn btn-sm btn-outline-secondary w-100" title="Вниз">
+            <i class="fas fa-chevron-down"></i>
+          </button>
+        </form>
+        <% } %>
+        <form action="/admin/activity/<%= section.key %>/page/blocks/<%= block.id %>/delete" method="POST"
+              onsubmit="return confirm('Удалить блок?')">
+          <button type="submit" class="btn btn-sm btn-outline-danger w-100" title="Удалить">
+            <i class="fas fa-trash"></i>
+          </button>
+        </form>
+      </div>
+
+    </div>
+    <% }); %>
+  </div>
+</div>
+<% } else { %>
+<div class="alert alert-info mb-4">
+  <i class="fas fa-info-circle me-2"></i>Страница пуста. Добавьте текстовые блоки и фотографии ниже.
+</div>
+<% } %>
+
+<!-- Add text block -->
+<div class="admin-card mb-4">
+  <div class="admin-card-header"><h5 class="mb-0"><i class="fas fa-plus me-2"></i>Добавить текстовый блок</h5></div>
+  <div class="admin-card-body">
+    <form action="/admin/activity/<%= section.key %>/page/blocks/text" method="POST">
+      <div class="mb-3">
+        <textarea name="content" class="form-control font-monospace" rows="6"
+          placeholder="Введите текст. Разделяйте абзацы пустой строкой."></textarea>
+        <div class="form-text">Разделяйте абзацы пустой строкой.</div>
+      </div>
+      <button type="submit" class="btn btn-primary">
+        <i class="fas fa-plus me-1"></i>Добавить текст
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Add image block -->
+<div class="admin-card mb-4">
+  <div class="admin-card-header"><h5 class="mb-0"><i class="fas fa-image me-2"></i>Добавить фото</h5></div>
+  <div class="admin-card-body">
+    <form action="/admin/activity/<%= section.key %>/page/blocks/image" method="POST" enctype="multipart/form-data">
+      <div class="input-group">
+        <input type="file" name="image" class="form-control" accept="image/*" required>
+        <button type="submit" class="btn btn-success">
+          <i class="fas fa-upload me-1"></i>Добавить фото
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include('partials/admin-layout-bottom') %>
+
+<style>
+.block-item:last-child { border-bottom: none !important; }
+</style>

@@ -149,6 +149,13 @@ function initDatabase() {
       photo TEXT DEFAULT '',
       sort_order INTEGER DEFAULT 0
     );
+    CREATE TABLE IF NOT EXISTS activity_page_blocks (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      section TEXT NOT NULL,
+      type TEXT NOT NULL,
+      content TEXT DEFAULT '',
+      sort_order INTEGER DEFAULT 0
+    );
   `);
 
   // Remove Ogarkov from history leaders

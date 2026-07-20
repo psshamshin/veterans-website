@@ -11,8 +11,11 @@
 
 <% sections.forEach(function(section) { %>
 <div class="admin-card mb-4">
-  <div class="admin-card-header">
+  <div class="admin-card-header d-flex justify-content-between align-items-center">
     <h5 class="mb-0"><%= section.label %></h5>
+    <a href="/admin/activity/<%= section.key %>/page" class="btn btn-sm btn-outline-primary">
+      <i class="fas fa-layer-group me-1"></i>Конструктор страницы
+    </a>
   </div>
   <div class="admin-card-body">
 

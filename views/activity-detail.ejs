@@ -18,6 +18,7 @@
 
 <main class="py-5">
   <div class="container">
+    <% if (blocks.length === 0) { %>
     <div class="text-center py-5">
       <i class="fas fa-tools fa-3x mb-4" style="color:var(--primary); opacity:0.35;"></i>
       <h3 style="color:var(--primary);">Раздел находится в разработке</h3>
@@ -26,7 +27,39 @@
         <i class="fas fa-arrow-left me-2"></i>Вернуться к деятельности
       </a>
     </div>
+    <% } else { %>
+    <% blocks.forEach(function(block) { %>
+      <% if (block.type === 'text') { %>
+      <div class="activity-detail-text mb-4">
+        <% (block.content || '').split(/\n\n+/).forEach(function(p) { %>
+        <p><%= p %></p>
+        <% }); %>
+      </div>
+      <% } else if (block.type === 'image') { %>
+      <div class="activity-detail-image mb-4">
+        <img src="<%= block.content %>" alt="" class="img-fluid rounded shadow">
+      </div>
+      <% } %>
+    <% }); %>
+    <div class="mt-4">
+      <a href="/activity" class="btn btn-outline-primary btn-sm">
+        <i class="fas fa-arrow-left me-1"></i>Вернуться к деятельности
+      </a>
+    </div>
+    <% } %>
   </div>
 </main>
 
 <%- include('partials/footer') %>
+
+<style>
+.activity-detail-text p {
+  font-size: 1rem; line-height: 1.75; color: #111; margin-bottom: 1rem;
+}
+.activity-detail-image {
+  text-align: center;
+}
+.activity-detail-image img {
+  max-width: 860px; width: 100%;
+}
+</style>
