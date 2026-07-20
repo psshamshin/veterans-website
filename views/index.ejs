@@ -110,7 +110,7 @@
             <div class="card-body">
               <span class="news-category badge"><%= featured.category %></span>
               <h3 class="news-title-lg mt-2">
-                <a href="/news/<%= featured.id %>"><%= featured.title %></a>
+                <a href="/news/<%= featured.id %>" class="stretched-link"><%= featured.title %></a>
               </h3>
               <p class="news-excerpt"><%= featured.excerpt || featured.content.replace(/<[^>]*>/g, '').substring(0, 200) %>...</p>
               <div class="news-meta">
@@ -137,7 +137,7 @@
               <div class="card-body">
                 <span class="news-category badge badge-sm"><%= item.category %></span>
                 <h5 class="news-title mt-1">
-                  <a href="/news/<%= item.id %>"><%= item.title %></a>
+                  <a href="/news/<%= item.id %>" class="stretched-link"><%= item.title %></a>
                 </h5>
                 <p class="news-excerpt-sm"><%= (item.excerpt || item.content.replace(/<[^>]*>/g,'')).substring(0,120) %>...</p>
                 <div class="news-meta-sm">
@@ -249,7 +249,7 @@
         <div class="card-body">
           <span class="news-category badge badge-sm"><%= item.category %></span>
           <h5 class="news-title mt-1">
-            <a href="/news/<%= item.id %>"><%= item.title %></a>
+            <a href="/news/<%= item.id %>" class="stretched-link"><%= item.title %></a>
           </h5>
           <p class="news-excerpt-sm"><%= (item.excerpt || item.content.replace(/<[^>]*>/g,'')).substring(0,120) %>...</p>
           <div class="news-meta-sm">

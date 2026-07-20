@@ -29,7 +29,7 @@
 
       <% if (news.length > 0) { %>
         <% news.forEach(item => { %>
-        <div class="news-list-item">
+        <div class="news-list-item position-relative">
           <% if (item.image) { %>
           <div class="news-list-img">
             <a href="/news/<%= item.id %>">
@@ -50,7 +50,7 @@
               </span>
             </div>
             <h4 class="news-list-title">
-              <a href="/news/<%= item.id %>"><%= item.title %></a>
+              <a href="/news/<%= item.id %>" class="stretched-link"><%= item.title %></a>
             </h4>
             <p class="news-list-excerpt">
               <%= (item.excerpt || item.content.replace(/<[^>]*>/g, '')).substring(0, 250) %>...
