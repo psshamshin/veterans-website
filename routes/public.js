@@ -109,7 +109,7 @@ router.get('/documents', (req, res) => {
 
 // Gazette "Ветеран" — each issue is one cover image + one downloadable PDF
 router.get('/gazette', (req, res) => {
-  const issues = getAll('SELECT * FROM gazette_issues ORDER BY created_at DESC, id DESC');
+  const issues = getAll('SELECT * FROM gazette_issues ORDER BY title DESC');
   res.render('gazette', { title: 'Газета «Ветеран»', activePage: 'gazette', issues });
 });
 
@@ -168,7 +168,15 @@ router.get('/activity', (req, res) => {
     patriotic:   getSetting('activity_patriotic_image') || '',
     cooperation: getSetting('activity_cooperation_image') || '',
   };
-  res.render('activity', { title: 'Деятельность', activePage: 'activity', contestsTitle, contestsText, contestPhotos, activityPhotos });
+  const activityTexts = {
+    social_title:      getSetting('activity_social_title')      || 'Социальная защита ветеранов',
+    social_text:       getSetting('activity_social_text')       || '',
+    patriotic_title:   getSetting('activity_patriotic_title')   || 'Патриотическое воспитание и работа с молодёжью',
+    patriotic_text:    getSetting('activity_patriotic_text')    || '',
+    cooperation_title: getSetting('activity_cooperation_title') || 'Взаимодействие с органами власти',
+    cooperation_text:  getSetting('activity_cooperation_text')  || '',
+  };
+  res.render('activity', { title: 'Деятельность', activePage: 'activity', contestsTitle, contestsText, contestPhotos, activityPhotos, activityTexts });
 });
 
 router.get('/regions', (req, res) => {
@@ -185,6 +193,20 @@ router.get('/regions', (req, res) => {
     .map(g => ({ ...g, items: all.filter(r => r.type === g.key) }))
     .filter(g => g.items.length > 0);
   res.render('regions', { title: 'Региональные организации', grouped, total: all.length, activePage: 'regions' });
+});
+
+const ACTIVITY_DETAIL_PAGES = {
+  social:      'Социальная защита ветеранов',
+  patriotic:   'Патриотическое воспитание и работа с молодёжью',
+  cooperation: 'Взаимодействие с органами власти',
+};
+
+router.get('/activity/:section', (req, res) => {
+  const key = req.params.section;
+  if (!ACTIVITY_DETAIL_PAGES[key]) return res.status(404).render('404', { title: 'Не найдено' });
+  const getSetting = k => { const r = getOne('SELECT value FROM settings WHERE key = ?', [k]); return r ? r.value : null; };
+  const title = getSetting('activity_' + key + '_title') || ACTIVITY_DETAIL_PAGES[key];
+  res.render('activity-detail', { title, section: key, activePage: 'activity' });
 });
 
 module.exports = router;

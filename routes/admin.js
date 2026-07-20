@@ -552,15 +552,30 @@ const ACTIVITY_SECTIONS = [
 
 router.get('/activity', requireAdmin, (req, res) => {
   const photos = {};
-  ACTIVITY_SECTIONS.forEach(s => { photos[s.key] = getSetting('activity_' + s.key + '_image'); });
+  const texts = {};
+  ACTIVITY_SECTIONS.forEach(s => {
+    photos[s.key] = getSetting('activity_' + s.key + '_image');
+    texts[s.key + '_title'] = getSetting('activity_' + s.key + '_title') || s.label;
+    texts[s.key + '_text']  = getSetting('activity_' + s.key + '_text')  || '';
+  });
   res.render('admin/activity', {
-    title: 'Деятельность — фото',
+    title: 'Деятельность — разделы',
     activePage: 'activity-admin',
     flash_success: req.flash('success'),
     flash_error: req.flash('error'),
     sections: ACTIVITY_SECTIONS,
     photos,
+    texts,
   });
+});
+
+router.post('/activity/:section/text', requireAdmin, (req, res) => {
+  const { section } = req.params;
+  if (!ACTIVITY_SECTIONS.find(s => s.key === section)) return res.redirect('/admin/activity');
+  setSetting('activity_' + section + '_title', req.body.title || '');
+  setSetting('activity_' + section + '_text',  req.body.text  || '');
+  req.flash('success', 'Текст сохранён');
+  res.redirect('/admin/activity');
 });
 
 router.post('/activity/:section/photo', requireAdmin, upload.single('image'), (req, res) => {

@@ -21,19 +21,10 @@
   <section id="social" class="activity-section mb-5 pt-3">
     <div class="row align-items-center g-4">
       <div class="col-lg-7 order-1">
-        <h2 class="activity-title">Социальная защита ветеранов</h2>
+        <h2 class="activity-title"><%= activityTexts.social_title %></h2>
         <div class="content-divider"></div>
-        <p class="activity-text">
-          Организация осуществляет системную работу по защите социальных прав и интересов ветеранов.
-          Мы добиваемся улучшения пенсионного обеспечения, сохранения льгот и гарантий для ветеранов войны,
-          труда и военной службы. Ведётся постоянный мониторинг исполнения федерального законодательства
-          о ветеранах, оказывается юридическая помощь при решении социальных вопросов.
-        </p>
-        <p class="activity-text">
-          Совместно с органами государственной власти реализуются программы улучшения жилищных условий,
-          медицинского обслуживания и санаторно-курортного лечения. Организация участвует в разработке
-          нормативных актов, затрагивающих интересы ветеранского сообщества.
-        </p>
+        <% (activityTexts.social_text || '').split(/\n\n+/).forEach(function(p) { %><p class="activity-text"><%= p %></p><% }); %>
+        <a href="/activity/social" class="btn btn-outline-primary btn-sm mt-2">Подробнее <i class="fas fa-arrow-right ms-1"></i></a>
       </div>
       <div class="col-lg-5 order-2">
         <div class="activity-img-wrap">
@@ -66,19 +57,10 @@
         </div>
       </div>
       <div class="col-lg-7 order-1 order-lg-2">
-        <h2 class="activity-title">Патриотическое воспитание и работа с молодёжью</h2>
+        <h2 class="activity-title"><%= activityTexts.patriotic_title %></h2>
         <div class="content-divider"></div>
-        <p class="activity-text">
-          Организация ведёт активную работу по патриотическому воспитанию молодого поколения.
-          Ветераны участвуют в проведении уроков мужества, встреч со школьниками и студентами,
-          передавая живую память о подвигах защитников Отечества. Ежегодно проводятся тысячи
-          встреч с молодёжью по всей стране.
-        </p>
-        <p class="activity-text">
-          Организуются торжественные мероприятия, посвящённые памятным датам российской истории:
-          Дню Победы, Дню защитника Отечества, годовщинам важнейших сражений. Поддерживаются
-          поисковые отряды, устанавливаются памятные знаки в честь героев Великой Отечественной войны.
-        </p>
+        <% (activityTexts.patriotic_text || '').split(/\n\n+/).forEach(function(p) { %><p class="activity-text"><%= p %></p><% }); %>
+        <a href="/activity/patriotic" class="btn btn-outline-primary btn-sm mt-2">Подробнее <i class="fas fa-arrow-right ms-1"></i></a>
       </div>
     </div>
   </section>
@@ -89,19 +71,10 @@
   <section id="cooperation" class="activity-section mb-5 pt-4">
     <div class="row align-items-center g-4">
       <div class="col-lg-7 order-1">
-        <h2 class="activity-title">Взаимодействие с органами власти</h2>
+        <h2 class="activity-title"><%= activityTexts.cooperation_title %></h2>
         <div class="content-divider"></div>
-        <p class="activity-text">
-          Совет ветеранов выстраивает конструктивный диалог с федеральными и региональными органами
-          государственной власти. Представители организации входят в состав общественных советов
-          при министерствах и ведомствах, участвуют в парламентских слушаниях и заседаниях
-          рабочих групп по вопросам социальной политики.
-        </p>
-        <p class="activity-text">
-          Налажено тесное партнёрство с Министерством обороны, МВД, Росгвардией и другими силовыми
-          структурами. Организация взаимодействует с Пенсионным фондом России, региональными
-          органами соцзащиты, учреждениями здравоохранения в интересах ветеранов.
-        </p>
+        <% (activityTexts.cooperation_text || '').split(/\n\n+/).forEach(function(p) { %><p class="activity-text"><%= p %></p><% }); %>
+        <a href="/activity/cooperation" class="btn btn-outline-primary btn-sm mt-2">Подробнее <i class="fas fa-arrow-right ms-1"></i></a>
       </div>
       <div class="col-lg-5 order-2">
         <div class="activity-img-wrap">
