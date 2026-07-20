@@ -31,9 +31,7 @@
     <% blocks.forEach(function(block) { %>
       <% if (block.type === 'text') { %>
       <div class="activity-detail-text mb-4">
-        <% (block.content || '').split(/\n\n+/).forEach(function(p) { %>
-        <p><%= p %></p>
-        <% }); %>
+        <%- block.content %>
       </div>
       <% } else if (block.type === 'image') { %>
       <div class="activity-detail-image mb-4">
