@@ -113,6 +113,11 @@ router.get('/gazette', (req, res) => {
   res.render('gazette', { title: 'Газета «Ветеран»', activePage: 'gazette', issues });
 });
 
+// Privacy policy
+router.get('/privacy', (req, res) => {
+  res.render('privacy', { title: 'Политика конфиденциальности', activePage: '' });
+});
+
 // Contacts GET
 router.get('/contacts', (req, res) => {
   res.render('contacts', { title: 'Контакты', activePage: 'contacts' });
