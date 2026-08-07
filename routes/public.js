@@ -22,7 +22,9 @@ router.get('/', (req, res) => {
   const heroSlide1 = getSetting('hero_slide_1');
   const heroSlide2 = getSetting('hero_slide_2');
   const heroSlide3 = getSetting('hero_slide_3');
-  res.render('index', { title: 'Главная', news, galleryPhotos, heroSlide1, heroSlide2, heroSlide3, activePage: 'home' });
+  res.render('index', { title: 'Главная', news, galleryPhotos, heroSlide1, heroSlide2, heroSlide3, activePage: 'home',
+    description: 'Официальный сайт Всероссийской общественной организации ветеранов (пенсионеров) войны, труда, Вооружённых Сил и правоохранительных органов. Более 60 000 первичных организаций по всей России.',
+    ogUrl: '/' });
 });
 
 // About
@@ -41,7 +43,9 @@ router.get('/about', (req, res) => {
     central_council_title: getSetting('about_central_council_title') || '',
     central_council_text:  getSetting('about_central_council_text')  || '',
   };
-  res.render('about', { title: 'Об организации', activePage: 'about', chairman, bureau, staff, structureImage, centralCouncil, historyLeaders, aboutTexts });
+  res.render('about', { title: 'Об организации', activePage: 'about', chairman, bureau, staff, structureImage, centralCouncil, historyLeaders, aboutTexts,
+    description: 'История, структура и руководящие органы Всероссийской организации ветеранов. Основана в 1986 году, объединяет более 60 000 первичных организаций в 85 регионах России.',
+    ogUrl: '/about' });
 });
 
 // Leadership
@@ -69,7 +73,9 @@ router.get('/news', (req, res) => {
   const totalPages = Math.ceil(total / limit);
   const categories = getAll('SELECT DISTINCT category FROM news WHERE is_published = 1');
 
-  res.render('news', { title: 'Новости', news, currentPage: page, totalPages, category, categories, activePage: 'news' });
+  res.render('news', { title: 'Новости', news, currentPage: page, totalPages, category, categories, activePage: 'news',
+    description: 'Последние новости Всероссийской организации ветеранов: события организации, регионов, патриотические мероприятия.',
+    ogUrl: '/news' });
 });
 
 // News detail
@@ -84,14 +90,21 @@ router.get('/news/:id', (req, res) => {
   const extraPhotos = getAll('SELECT image FROM news_photos WHERE news_id = ? ORDER BY sort_order ASC, id ASC', [item.id]);
   const allPhotos = [...(item.image ? [item.image] : []), ...extraPhotos.map(p => p.image)];
 
-  res.render('news-detail', { title: item.title, item, related, allPhotos, activePage: 'news' });
+  const newsDesc = (item.excerpt || item.content.replace(/<[^>]*>/g, '')).substring(0, 160).trim();
+  res.render('news-detail', { title: item.title, item, related, allPhotos, activePage: 'news',
+    description: newsDesc,
+    ogUrl: '/news/' + item.id,
+    ogImage: item.image || null,
+    ogType: 'article' });
 });
 
 // Events
 router.get('/events', (req, res) => {
   const upcoming = getAll('SELECT * FROM events WHERE is_past = 0 ORDER BY event_date ASC');
   const past     = getAll('SELECT * FROM events WHERE is_past = 1 ORDER BY event_date DESC');
-  res.render('events', { title: 'Мероприятия', upcoming, past, activePage: 'events' });
+  res.render('events', { title: 'Мероприятия', upcoming, past, activePage: 'events',
+    description: 'Мероприятия Всероссийской организации ветеранов: предстоящие и прошедшие события, памятные даты, торжественные церемонии.',
+    ogUrl: '/events' });
 });
 
 // Documents
@@ -104,7 +117,9 @@ router.get('/documents', (req, res) => {
     ...allCats.filter(c => isPriority(c)).sort(),
     ...allCats.filter(c => !isPriority(c)).sort(),
   ];
-  res.render('documents', { title: 'Документы', documents, categories, activePage: 'documents' });
+  res.render('documents', { title: 'Документы', documents, categories, activePage: 'documents',
+    description: 'Официальные документы Всероссийской организации ветеранов: устав, положения, нормативные акты и распорядительные документы.',
+    ogUrl: '/documents' });
 });
 
 // Gazette "Ветеран" — each issue is one cover image + one downloadable PDF
@@ -120,7 +135,9 @@ router.get('/privacy', (req, res) => {
 
 // Contacts GET
 router.get('/contacts', (req, res) => {
-  res.render('contacts', { title: 'Контакты', activePage: 'contacts' });
+  res.render('contacts', { title: 'Контакты', activePage: 'contacts',
+    description: 'Контакты Всероссийской организации ветеранов. Адрес: Москва, Денежный переулок, д. 12. Телефон: (499) 241-34-01.',
+    ogUrl: '/contacts' });
 });
 
 // Contacts POST
@@ -181,7 +198,9 @@ router.get('/activity', (req, res) => {
     cooperation_title: getSetting('activity_cooperation_title') || 'Взаимодействие с органами власти',
     cooperation_text:  getSetting('activity_cooperation_text')  || '',
   };
-  res.render('activity', { title: 'Деятельность', activePage: 'activity', contestsTitle, contestsText, contestPhotos, activityPhotos, activityTexts });
+  res.render('activity', { title: 'Деятельность', activePage: 'activity', contestsTitle, contestsText, contestPhotos, activityPhotos, activityTexts,
+    description: 'Деятельность Всероссийской организации ветеранов: социальная защита, патриотическое воспитание молодёжи, взаимодействие с органами государственной власти.',
+    ogUrl: '/activity' });
 });
 
 router.get('/regions', (req, res) => {
@@ -197,7 +216,9 @@ router.get('/regions', (req, res) => {
   const grouped = groupDefs
     .map(g => ({ ...g, items: all.filter(r => r.type === g.key) }))
     .filter(g => g.items.length > 0);
-  res.render('regions', { title: 'Региональные организации', grouped, total: all.length, activePage: 'regions' });
+  res.render('regions', { title: 'Региональные организации', grouped, total: all.length, activePage: 'regions',
+    description: 'Региональные организации ветеранов в 85 субъектах Российской Федерации. Контакты советов ветеранов в вашем регионе.',
+    ogUrl: '/regions' });
 });
 
 const ACTIVITY_DETAIL_PAGES = {
@@ -213,6 +234,72 @@ router.get('/activity/:section', (req, res) => {
   const title = getSetting('activity_' + key + '_title') || ACTIVITY_DETAIL_PAGES[key];
   const blocks = getAll('SELECT * FROM activity_page_blocks WHERE section = ? ORDER BY sort_order ASC, id ASC', [key]);
   res.render('activity-detail', { title, section: key, blocks, activePage: 'activity' });
+});
+
+// Sitemap
+router.get('/sitemap.xml', (req, res) => {
+  const BASE = 'https://veteran-org.ru';
+  const today = new Date().toISOString().split('T')[0];
+
+  const staticPages = [
+    { url: '/',          priority: '1.0', changefreq: 'daily'   },
+    { url: '/about',     priority: '0.8', changefreq: 'monthly' },
+    { url: '/news',      priority: '0.9', changefreq: 'daily'   },
+    { url: '/events',    priority: '0.8', changefreq: 'weekly'  },
+    { url: '/documents', priority: '0.7', changefreq: 'monthly' },
+    { url: '/contacts',  priority: '0.7', changefreq: 'monthly' },
+    { url: '/activity',  priority: '0.8', changefreq: 'monthly' },
+    { url: '/activity/social',      priority: '0.7', changefreq: 'monthly' },
+    { url: '/activity/patriotic',   priority: '0.7', changefreq: 'monthly' },
+    { url: '/activity/cooperation', priority: '0.7', changefreq: 'monthly' },
+    { url: '/regions',   priority: '0.7', changefreq: 'monthly' },
+    { url: '/gallery',   priority: '0.6', changefreq: 'weekly'  },
+    { url: '/gazette',   priority: '0.6', changefreq: 'monthly' },
+    { url: '/privacy',   priority: '0.3', changefreq: 'yearly'  },
+  ];
+
+  const news = getAll('SELECT id, published_at FROM news WHERE is_published = 1 ORDER BY published_at DESC');
+
+  const esc = s => s.replace(/&/g, '&amp;');
+
+  let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+  xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+
+  staticPages.forEach(p => {
+    xml += `  <url>\n`;
+    xml += `    <loc>${esc(BASE + p.url)}</loc>\n`;
+    xml += `    <lastmod>${today}</lastmod>\n`;
+    xml += `    <changefreq>${p.changefreq}</changefreq>\n`;
+    xml += `    <priority>${p.priority}</priority>\n`;
+    xml += `  </url>\n`;
+  });
+
+  news.forEach(item => {
+    const lastmod = item.published_at ? item.published_at.split(' ')[0] : today;
+    xml += `  <url>\n`;
+    xml += `    <loc>${esc(BASE + '/news/' + item.id)}</loc>\n`;
+    xml += `    <lastmod>${lastmod}</lastmod>\n`;
+    xml += `    <changefreq>never</changefreq>\n`;
+    xml += `    <priority>0.6</priority>\n`;
+    xml += `  </url>\n`;
+  });
+
+  xml += '</urlset>';
+
+  res.header('Content-Type', 'application/xml; charset=utf-8');
+  res.send(xml);
+});
+
+// Robots.txt
+router.get('/robots.txt', (req, res) => {
+  res.header('Content-Type', 'text/plain; charset=utf-8');
+  res.send(
+`User-agent: *
+Allow: /
+Disallow: /admin
+
+Sitemap: https://veteran-org.ru/sitemap.xml`
+  );
 });
 
 module.exports = router;
